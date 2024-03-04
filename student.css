@@ -1,0 +1,10 @@
+.club-container {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+.club-logo {
+    width: 100px;
+    height: auto;
+}

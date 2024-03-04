@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth"; // Import signInWithPopup
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, ref, set, get } from "firebase/database";
 import { getStorage, ref as storageRef, uploadBytes } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 
@@ -54,69 +54,76 @@ async function fillDatabase() {
 
         // Define the template structure
         const templateData = {
-            general: {
-                clubCategories: ["category 1", "category 2"],
-                weeklySchedule: {
-                    mon: ["event 1", "event 2"],
-                    tue: ["event 1", "event 2"],
-                    wed: ["event 1", "event 2"],
-                    thu: ["event 1", "event 2"],
-                    fri: ["event 1", "event 2"],
-                    sat: ["event 1", "event 2"],
-                    sun: ["event 1", "event 2"],
+            db: {
+                general: {
+                    clubCategories: ["category 1", "category 2"],
+                    weeklySchedule: {
+                        mon: ["event 1", "event 2"],
+                        tue: ["event 1", "event 2"],
+                        wed: ["event 1", "event 2"],
+                        thu: ["event 1", "event 2"],
+                        fri: ["event 1", "event 2"],
+                        sat: ["event 1", "event 2"],
+                        sun: ["event 1", "event 2"],
+                    },
+                    trustedEmails: ["carter.h.ross.5176@gmail.com", "4carter.ross@benet.org", "sfrey@benet.org"],
                 },
-                trustedEmails: ["carter.h.ross.5176@gmail.com", "4carter.ross@benet.org", "sfrey@benet.org"],
-            },
-            admins: {
-                nextWeekEventProposals: {
-                    mon: ["event 1", "event 2"],
-                    tue: ["event 1", "event 2"],
-                    wed: ["event 1", "event 2"],
-                    thu: ["event 1", "event 2"],
-                    fri: ["event 1", "event 2"],
-                    sat: ["event 1", "event 2"],
-                    sun: ["event 1", "event 2"],
+                admins: {
+                    nextWeekEventProposals: {
+                        mon: ["event 1", "event 2"],
+                        tue: ["event 1", "event 2"],
+                        wed: ["event 1", "event 2"],
+                        thu: ["event 1", "event 2"],
+                        fri: ["event 1", "event 2"],
+                        sat: ["event 1", "event 2"],
+                        sun: ["event 1", "event 2"],
+                    },
+                    clubProposals: [
+                        {
+                            category: "category 1",
+                            clubName: "club 3",
+                            clubDescription: "This is a description of the third club. This club meets on fridays after school",
+                            contacts: "4carter.ross@benet.org",
+                            logo: "",
+                        },
+                        {
+                            category: "category 2",
+                            clubName: "club 4",
+                            clubDescription: "This is a description of the fourth club. This club meets on fridays after school",
+                            contacts: "4carter.ross@benet.org",
+                            logo: "",
+                        },
+                    ]
                 },
-                clubProposals: [
-                    {
-                        category: "category 1",
-                        clubName: "club 3",
-                        clubDescription: "This is a description of the third club. This club meets on fridays after school",
-                        contacts: "4carter.ross@benet.org",
-                        logo: "",
-                    },
-                    {
-                        category: "category 2",
-                        clubName: "club 4",
-                        clubDescription: "This is a description of the fourth club. This club meets on fridays after school",
-                        contacts: "4carter.ross@benet.org",
-                        logo: "",
-                    },
-                ]
-            },
-            students: {
-                clubs: [
-                    {
-                        category: "category 1",
-                        clubName: "club 1",
-                        clubDescription: "This is a description of the first club. This club meets on wednesdays after school",
-                        contacts: "4carter.ross@benet.org",
-                        logo: "",
-                    },
-                    {
-                        category: "category 2",
-                        clubName: "club 2",
-                        clubDescription: "This is a description of the second club. This club meets on mondays after school",
-                        contacts: "4carter.ross@benet.org",
-                        logo: "",
-                    },
-                ],
+                students: {
+                    clubs: [
+                        {
+                            category: "category 1",
+                            clubName: "club 1",
+                            clubDescription: "This is a description of the first club. This club meets on wednesdays after school",
+                            contacts: "4carter.ross@benet.org",
+                            logo: "gs://benet-clubs.appspot.com/download (1).jpg",
+                        },
+                        {
+                            category: "category 2",
+                            clubName: "club 2",
+                            clubDescription: "This is a description of the second club. This club meets on mondays after school",
+                            contacts: "4carter.ross@benet.org",
+                            logo: "gs://benet-clubs.appspot.com/download.jpg",
+                        },
+                        {
+                            category: "category 1",
+                            clubName: "club 2",
+                            clubDescription: "This is a description of the third club. This club meets on mondays after school",
+                            contacts: "4carter.ross@benet.org",
+                            logo: "gs://benet-clubs.appspot.com/download.png",
+                        },
+                    ],
+                }
             }
         };
 
-        // Fill the database with the template structure
         await set(databaseRef, templateData);
-
         console.log("Firebase database filled with template structure successfully.");
     } catch (error) {
         console.error("Error filling Firebase database:", error);
@@ -134,9 +141,43 @@ async function uploadImageFile(imageFile) {
         // You can get the download URL of the uploaded image using snapshot.ref.getDownloadURL()
         const downloadURL = await snapshot.ref.getDownloadURL();
         console.log("Download URL:", downloadURL);
-        return downloadURL; // Return the download URL of the uploaded image
+        return downloadURL;
     } catch (error) {
         console.error("Error uploading image:", error);
         return null;
+    }
+}
+
+// loading content to the database when the website is loaded
+document.addEventListener("DOMContentLoaded", function() {
+    populateEvents();
+});
+
+async function populateEvents() {
+    try {
+        const snapshot = await get(databaseRef); // Retrieve data from Firebase database
+        const data = snapshot.val(); // Extract the JSON object from the snapshot
+        const weeklySchedule = data.db.general.weeklySchedule; // Get the weekly schedule data
+        
+        // Loop through each day of the week and populate events
+        Object.keys(weeklySchedule).forEach(day => {
+            const events = weeklySchedule[day];
+            const dayElement = document.getElementById(day);
+            if (dayElement) {
+                dayElement.innerHTML = ""; // Clear previous events
+                events.forEach((event, index) => {
+                    const eventElement = document.createElement("div");
+                    eventElement.textContent = event;
+                    if (index < events.length - 1) {
+                        eventElement.innerHTML += "<hr>"; // Add line break if not the last event
+                    }
+                    dayElement.appendChild(eventElement);
+                });
+            }
+        });
+
+        console.log("Events populated successfully.");
+    } catch (error) {
+        console.error("Error populating events:", error);
     }
 }
