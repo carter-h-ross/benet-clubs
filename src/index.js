@@ -32,15 +32,26 @@ const databaseRef = ref(database);
 const loginButton = document.getElementById("signInButton"); // Remove '#' from getElementById
 console.log(loginButton);
 
-loginButton.addEventListener('click', (e) => { // Change 'submit' to 'click' as it's a button, not a form
+loginButton.addEventListener('click', (e) => {
     signInWithPopup(auth, provider)
-        .then((result) => {
+        .then(async (result) => {
             // This gives you a Google Access Token. You can use it to access the Google API.
             const credential = GoogleAuthProvider.credentialFromResult(result);
             const token = credential.accessToken;
             const user = result.user;
             email = user.email;
             console.log(email);
+
+            // Check if the user's email is in the trusted emails list
+            const trustedEmails = await get(ref(database, 'db/general/trustedEmails'));
+            const trustedEmailsList = trustedEmails.val();
+            if (trustedEmailsList && trustedEmailsList.includes(email)) {
+                // Redirect to admin.html
+                window.location.href = 'admin.html';
+            } else {
+                // Redirect to student.html
+                window.location.href = 'student.html';
+            }
         }).catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
@@ -48,6 +59,7 @@ loginButton.addEventListener('click', (e) => { // Change 'submit' to 'click' as 
             console.error(`error code: ${errorCode} | error message: ${errorMessage} | auth credential type used: ${credential}`);
         });
 })
+
 
 async function fillDatabase() {
     try {

@@ -6,7 +6,6 @@ import { getDatabase, ref, set, get } from "firebase/database";
 import { getStorage, ref as storageRef, uploadBytes } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 
-
 // Your web app's Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyB4LwmH1s7oKi-Io9ifl89y0InCcX6amVM",
