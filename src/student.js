@@ -70,4 +70,38 @@ async function loadClubsByCategory(category) {
     }
 }
 
+// loading content to the database when the website is loaded
+document.addEventListener("DOMContentLoaded", function() {
+    populateEvents();
+});
+
+async function populateEvents() {
+    try {
+        const snapshot = await get(databaseRef); // Retrieve data from Firebase database
+        const data = snapshot.val(); // Extract the JSON object from the snapshot
+        const weeklySchedule = data.db.general.weeklySchedule; // Get the weekly schedule data
+        
+        // Loop through each day of the week and populate events
+        Object.keys(weeklySchedule).forEach(day => {
+            const events = weeklySchedule[day];
+            const dayElement = document.getElementById(day);
+            if (dayElement) {
+                dayElement.innerHTML = ""; // Clear previous events
+                events.forEach((event, index) => {
+                    const eventElement = document.createElement("div");
+                    eventElement.textContent = event;
+                    if (index < events.length - 1) {
+                        eventElement.innerHTML += "<hr>"; // Add line break if not the last event
+                    }
+                    dayElement.appendChild(eventElement);
+                });
+            }
+        });
+
+        console.log("Events populated successfully.");
+    } catch (error) {
+        console.error("Error populating events:", error);
+    }
+}
+
 loadClubsByCategory("all")

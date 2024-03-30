@@ -60,7 +60,6 @@ loginButton.addEventListener('click', (e) => {
         });
 })
 
-
 async function fillDatabase() {
     try {
 

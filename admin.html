@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="admin.css">
     <title>add club</title>
 </head>
 <body>
@@ -18,8 +18,12 @@
         </select>
         <h1>club name:</h1>
         <input id="clubNameInput" type="text">
-        <h1>club descirption:</h1>
+        <h1>club description:</h1>
         <input id="clubDescriptionInput" type="text">
+        <h1>club contacts:</h1>
+        <input id="clubContactsInput" type="text"> <!-- Changed the ID to clubContactsInput -->
+        <button id="addContactButton">Add Contact</button> <!-- Added a button to add contacts -->
+        <div id="contactList"></div> <!-- Added a div to display added contacts -->
         <h1>upload club logo:</h1>
         <input id="clubLogoInput" type="file">
         <button id="submitClubButton" type="submit">submit club</button>

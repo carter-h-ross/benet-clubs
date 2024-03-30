@@ -2,7 +2,7 @@
 import { initializeApp } from "firebase/app";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { getDatabase, ref, set,get, push, child } from "firebase/database";
-import { getStorage, ref as storageRef, uploadBytes } from "firebase/storage";
+import { getStorage, ref as storageRef, uploadBytes , getDownloadURL} from "firebase/storage";
 import { getAuth } from "firebase/auth";
 
 // Your web app's Firebase configuration
@@ -82,7 +82,7 @@ submitClubButton.addEventListener("click", async () => {
     const logoDownloadURL = await uploadImageFile(clubLogoFile);
 
     // Create club object
-    const club = {
+    const newClub = {
         category,
         clubName,
         clubDescription,
@@ -90,10 +90,17 @@ submitClubButton.addEventListener("click", async () => {
         logo: logoDownloadURL || "", // Use the download URL if available, otherwise an empty string
     };
 
-    // Push club data to Firebase Database
     try {
-        const clubsRef = child(databaseRef, 'db/students/clubs');
-        await push(clubsRef, club);
+        // Get the current list of clubs from the database
+        const clubsSnapshot = await get(ref(database, 'db/students/clubs'));
+        let clubsList = clubsSnapshot.val() || []; // If no clubs exist, start with an empty array
+
+        // Append the new club to the existing list
+        clubsList.push(newClub);
+
+        // Update the list of clubs in the database
+        await set(ref(database, 'db/students/clubs'), clubsList);
+
         console.log("Club submitted successfully.");
         // Clear input fields after submission
         clubCategoryInput.value = "";
@@ -105,6 +112,7 @@ submitClubButton.addEventListener("click", async () => {
     }
 });
 
+
 // Function to upload image file to Firebase Storage
 async function uploadImageFile(imageFile) {
     try {
@@ -114,7 +122,7 @@ async function uploadImageFile(imageFile) {
         const snapshot = await uploadBytes(storageReference, imageFile);
         console.log("Image uploaded successfully:", snapshot);
         // You can get the download URL of the uploaded image using snapshot.ref.getDownloadURL()
-        const downloadURL = await snapshot.ref.getDownloadURL();
+        const downloadURL = await getDownloadURL(snapshot.ref);
         console.log("Download URL:", downloadURL);
         return downloadURL;
     } catch (error) {
@@ -122,7 +130,16 @@ async function uploadImageFile(imageFile) {
         return null;
     }
 }
-  
+
+const addNewContactButton = document.getElementById('addContactButton');
+addNewContactButton.addEventListener('click', function() {
+    var contactInput = document.getElementById('clubContactsInput').value;
+    var contactList = document.getElementById('contactList');
+    var contactItem = document.createElement('div');
+    contactItem.textContent = contactInput;
+    contactList.appendChild(contactItem);
+    document.getElementById('clubContactsInput').value = ''; // Clear input after adding contact
+});
 
 // Function to handle adding new category
 addNewCategoryButton.addEventListener("click", async () => {

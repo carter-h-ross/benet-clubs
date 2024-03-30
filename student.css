@@ -1,10 +1,141 @@
-.club-container {
+/* CSS code for JavaScript code */
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+
+    margin: 0;
+    padding: 0;
+    background-color: rgb(244, 93, 93); /* Set page background color to red */
+}
+
+/* Club Container Styles */
+#clubsContainer {
     display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 10px;
-    margin-bottom: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* 2-column format, with columns added as needed */
+    gap: 20px; /* Adjust gap between club divs */
+    padding: 20px; /* Add padding */
 }
-.club-logo {
-    width: 100px;
-    height: auto;
+  
+  /* Styles for club container */
+  .club-container {
+    /* From https://css.glass */
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 20px; /* Add padding */
+    border-radius: 10px; /* Add border radius */
+    box-shadow: 5px 5px 5px rgb(178, 176, 176);
+    display: flex;
+    align-items: center;
+    margin-bottom: 2vh;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .club-container:hover {
+    transform: scale(1.03); /* Scale the container to appear larger */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* Increase box shadow */
+  }
+  
+  /* Styles for club logo */
+  .club-logo {
+    width: 10vw;
+    height: 10vw;
+    margin-right: 2vw;
+  }
+  
+  /* Styles for club details */
+  .club-details {
+    flex: 1;
+  }
+  
+  /* Styles for main title */
+  #mainTitle {
+    text-align: center;
+    font-size: 2.4vh;
+    margin-bottom: 2vh;
+  }
+  
+  /* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    
 }
+
+/* Events Container Styles */
+#eventsContainer {
+    margin-top: 1vh;
+}
+
+button {
+    background: #d93434;
+    background-image: -webkit-linear-gradient(top, #d93434, #3b282c);
+    background-image: -moz-linear-gradient(top, #d93434, #3b282c);
+    background-image: -ms-linear-gradient(top, #d93434, #3b282c);
+    background-image: -o-linear-gradient(top, #d93434, #3b282c);
+    background-image: linear-gradient(to bottom, #d93434, #3b282c);
+    -webkit-border-radius: 28;
+    -moz-border-radius: 28;
+    border-radius: 28px;
+    font-family: Arial;
+    color: #ffffff;
+    font-size: 20px;
+    padding: 10px 20px 10px 20px;
+    border: solid #1f628d 0px;
+    text-decoration: none;
+}  
+button:hover {
+    background: #d93434;
+    background-image: -webkit-linear-gradient(top, #3b282c, #d93434);
+    background-image: -moz-linear-gradient(top, #3b282c, #d93434);
+    background-image: -ms-linear-gradient(top, #3b282c, #d93434);
+    background-image: -o-linear-gradient(top, #3b282c, #d93434);
+    background-image: linear-gradient(to bottom, #3b282c, #d93434);
+    text-decoration: none;
+}
+
+#mainTitle {
+    text-align: center;
+}
+
+/* Table Title Styles */
+#tableTitleDiv {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3vh;
+}
+
+/* Day Div Styles */
+.parent {
+    margin-left: 2%;
+    margin-right: 2%;
+    display: grid;
+    grid-template-rows: repeat(7, 1fr);
+    grid-gap: 2vh;
+}
+
+#mon,
+#tue,
+#wed,
+#thu,
+#fri,
+#sat,
+#sun {
+    /* From https://css.glass */
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 3vh;
+
+    border-radius: 5px;
+    margin-left: 2%;
+    margin-right: 2%;
+    margin-bottom: 2vh;
+}
+  
