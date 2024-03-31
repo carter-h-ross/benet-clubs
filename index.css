@@ -1,10 +1,67 @@
+/* CSS code for JavaScript code */
 /* Global Styles */
 body {
     font-family: Arial, sans-serif;
-    
-    margin: 0;
+
+    margin: 1vh;
     padding: 0;
     background-color: rgb(244, 93, 93); /* Set page background color to red */
+}
+
+/* Club Container Styles */
+#clubsContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* 2-column format, with columns added as needed */
+    gap: 20px; /* Adjust gap between club divs */
+    padding: 20px; /* Add padding */
+}
+  
+  /* Styles for club container */
+  .club-container {
+    /* From https://css.glass */
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 20px; /* Add padding */
+    border-radius: 10px; /* Add border radius */
+    box-shadow: 5px 5px 5px rgb(178, 176, 176);
+    display: flex;
+    align-items: center;
+    margin-bottom: 2vh;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .club-container:hover {
+    transform: scale(1.03); /* Scale the container to appear larger */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* Increase box shadow */
+  }
+  
+  /* Styles for club logo */
+  .club-logo {
+    width: 10vw;
+    height: 10vw;
+    margin-right: 2vw;
+  }
+  
+  /* Styles for club details */
+  .club-details {
+    flex: 1;
+  }
+  
+  /* Styles for main title */
+  #mainTitle {
+    text-align: center;
+    font-size: 2.4vh;
+    margin-bottom: 2vh;
+  }
+  
+  /* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    
 }
 
 /* Events Container Styles */
@@ -45,8 +102,10 @@ button:hover {
 
 /* Table Title Styles */
 #tableTitleDiv {
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    margin-bottom: 1vh;
+    margin-bottom: 3vh;
 }
 
 /* Day Div Styles */
@@ -73,8 +132,16 @@ button:hover {
     -webkit-backdrop-filter: blur(5px);
     border: 1px solid rgba(255, 255, 255, 0.3);
     padding: 3vh;
+
     border-radius: 5px;
     margin-left: 2%;
     margin-right: 2%;
     margin-bottom: 2vh;
+}
+  
+.pointer:hover {
+  cursor:pointer;
+}
+.no-drop {
+  cursor: no-drop;
 }

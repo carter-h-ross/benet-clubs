@@ -16,9 +16,9 @@
     <div id="eventsContainer">
         <div class="parent">
             <div id="tableTitleDiv">
-                <button id="requestClubButton"> request new club </button>
+                <button id="requestClubButton" class="pointer"> request new club </button>
                 <h3 id="weekTitle">Benet club events this week</h3>
-                <button id="requestEventButton"> request new event </button>
+                <button id="requestEventButton" class="pointer"> request new event </button>
             </div>
             <div>
                 <label for="mon">Monday:</label>
@@ -48,6 +48,20 @@
                 <label for="sun">Sunday:</label>
                 <div id="sun"> events for sunday</div>
             </div>
+        </div>
+    </div>
+
+    <!-- HTML: Add expanded club view elements -->
+    <div id="expandedClubView" style="display: none;">
+        <div id="expandedClubDetails">
+            <h2 id="expandedClubName"></h2>
+            <p id="expandedClubDescription"></p>
+            <p id="expandedClubContacts"></p>
+        </div>
+        <div id="expandedClubButtons">
+            <button id="backButton">Back</button>
+            <button id="editClubButton">Edit Club</button>
+            <button id="addPhotoButton">Add Photo</button>
         </div>
     </div>
 

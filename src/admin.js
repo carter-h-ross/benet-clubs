@@ -77,6 +77,8 @@ submitClubButton.addEventListener("click", async () => {
     const clubName = clubNameInput.value;
     const clubDescription = clubDescriptionInput.value;
     const clubLogoFile = clubLogoInput.files[0];
+    const contacts = contactInput.value;
+    console.log(contacts);
 
     // Upload club logo to Firebase Storage
     const logoDownloadURL = await uploadImageFile(clubLogoFile);
@@ -86,7 +88,7 @@ submitClubButton.addEventListener("click", async () => {
         category,
         clubName,
         clubDescription,
-        contacts: email, // Assuming the current user's email is the contact
+        contacts, // Assuming the current user's email is the contact
         logo: logoDownloadURL || "", // Use the download URL if available, otherwise an empty string
     };
 
@@ -107,6 +109,7 @@ submitClubButton.addEventListener("click", async () => {
         clubNameInput.value = "";
         clubDescriptionInput.value = "";
         clubLogoInput.value = "";
+        contactInput.value = "";
     } catch (error) {
         console.error("Error submitting club:", error);
     }

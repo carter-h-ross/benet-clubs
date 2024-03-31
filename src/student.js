@@ -37,6 +37,9 @@ async function loadClubsByCategory(category) {
         const data = snapshot.val(); // Extract the JSON object from the snapshot
         const clubs = data.db.students.clubs; // Get the clubs data
         
+        // Sort the clubs alphabetically by club name
+        clubs.sort((a, b) => a.clubName.localeCompare(b.clubName));
+
         const clubsContainer = document.getElementById("clubsContainer");
         clubsContainer.innerHTML = ""; // Clear previous content
 
@@ -44,6 +47,7 @@ async function loadClubsByCategory(category) {
             if (club.category == category || category == "all") {
                 const clubContainer = document.createElement("div");
                 clubContainer.classList.add("club-container");
+                clubContainer.classList.add("pointer");
 
                 // Create and append club logo if available
                 if (club.logo) {
@@ -56,7 +60,7 @@ async function loadClubsByCategory(category) {
                 // Create and append club details
                 const clubDetails = document.createElement("div");
                 clubDetails.innerHTML = `<h2>${club.clubName}</h2>
-                                         <p>${club.clubDescription}</p>
+                                         <p class = "hidden">${club.clubDescription}</p>
                                          <p>Contact: ${club.contacts}</p>`;
                 clubContainer.appendChild(clubDetails);
 
@@ -65,6 +69,7 @@ async function loadClubsByCategory(category) {
         });
 
         console.log("Clubs loaded successfully.");
+        setupClubContainerListeners();
     } catch (error) {
         console.error("Error loading clubs:", error);
     }
@@ -74,6 +79,49 @@ async function loadClubsByCategory(category) {
 document.addEventListener("DOMContentLoaded", function() {
     populateEvents();
 });
+
+function setupClubContainerListeners() {
+    const clubContainers = document.querySelectorAll(".club-container");
+    clubContainers.forEach(clubContainer => {
+        clubContainer.addEventListener("click", function() {
+            expandClubView(this);
+        });
+    });
+}
+
+function expandClubView(clubContainer) {
+    // Remove any existing club logo from the expanded club view
+    const existingClubLogo = document.querySelector(".club-logo-expanded");
+    if (existingClubLogo) {
+        existingClubLogo.remove();
+    }
+
+    // Add a class to the body to indicate that the club view is expanded
+    document.body.classList.add("expanded-club-view");
+
+    console.log(clubContainer);
+    const clubName = clubContainer.querySelector("h2").textContent;
+    const paragraphs = clubContainer.querySelectorAll("p");
+    const clubDescription = paragraphs[0].textContent;
+    const clubContacts = paragraphs[1].textContent;
+
+    console.log(clubName);
+    console.log(paragraphs);
+    console.log(clubDescription);
+    console.log(clubContacts);
+
+    document.getElementById("expandedClubName").textContent = clubName;
+    document.getElementById("expandedClubDescription").textContent = clubDescription;
+    document.getElementById("expandedClubContacts").textContent = clubContacts;
+
+    // Create and append club logo to the expanded club view
+    const clubLogo = document.createElement("img");
+    clubLogo.classList.add("club-logo-expanded");
+    clubLogo.src = clubContainer.querySelector(".club-logo").src; // Get the source from the clicked club container
+    document.getElementById("expandedClubDetails").prepend(clubLogo);
+
+    document.getElementById("expandedClubView").style.display = "block";
+}
 
 async function populateEvents() {
     try {
@@ -103,5 +151,13 @@ async function populateEvents() {
         console.error("Error populating events:", error);
     }
 }
+
+const expandedClubViewBackButton = document.getElementById("backButton")
+expandedClubViewBackButton.addEventListener("click", () => {
+    // Remove the class from the body when the club view is closed
+    document.body.classList.remove("expanded-club-view");
+    
+    document.getElementById("expandedClubView").style.display = "none";
+});
 
 loadClubsByCategory("all")
