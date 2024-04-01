@@ -29,6 +29,10 @@ let email = null;
 // Initialize firebase realtime database
 const database = getDatabase();
 const databaseRef = ref(database);
+let indexes = {
+
+}
+let indexCount = 0;
 
 // Function to load clubs with a certain category
 async function loadClubsByCategory(category) {
@@ -44,6 +48,10 @@ async function loadClubsByCategory(category) {
         clubsContainer.innerHTML = ""; // Clear previous content
 
         clubs.forEach(club => {
+            indexes[club.clubName] = indexCount;
+            indexCount++;
+            console.log(club)
+            console.log(indexes);
             if (club.category == category || category == "all") {
                 const clubContainer = document.createElement("div");
                 clubContainer.classList.add("club-container");
@@ -79,6 +87,35 @@ async function loadClubsByCategory(category) {
 document.addEventListener("DOMContentLoaded", function() {
     populateEvents();
 });
+
+async function populateEvents() {
+    try {
+        const snapshot = await get(databaseRef); // Retrieve data from Firebase database
+        const data = snapshot.val(); // Extract the JSON object from the snapshot
+        const weeklySchedule = data.db.general.weeklySchedule; // Get the weekly schedule data
+        
+        // Loop through each day of the week and populate events
+        Object.keys(weeklySchedule).forEach(day => {
+            const events = weeklySchedule[day];
+            const dayElement = document.getElementById(day);
+            if (dayElement) {
+                dayElement.innerHTML = ""; // Clear previous events
+                events.forEach((event, index) => {
+                    const eventElement = document.createElement("div");
+                    eventElement.textContent = event;
+                    if (index < events.length - 1) {
+                        eventElement.innerHTML += "<hr>"; // Add line break if not the last event
+                    }
+                    dayElement.appendChild(eventElement);
+                });
+            }
+        });
+
+        console.log("Events populated successfully.");
+    } catch (error) {
+        console.error("Error populating events:", error);
+    }
+}
 
 function setupClubContainerListeners() {
     const clubContainers = document.querySelectorAll(".club-container");
@@ -123,41 +160,89 @@ function expandClubView(clubContainer) {
     document.getElementById("expandedClubView").style.display = "block";
 }
 
-async function populateEvents() {
-    try {
-        const snapshot = await get(databaseRef); // Retrieve data from Firebase database
-        const data = snapshot.val(); // Extract the JSON object from the snapshot
-        const weeklySchedule = data.db.general.weeklySchedule; // Get the weekly schedule data
-        
-        // Loop through each day of the week and populate events
-        Object.keys(weeklySchedule).forEach(day => {
-            const events = weeklySchedule[day];
-            const dayElement = document.getElementById(day);
-            if (dayElement) {
-                dayElement.innerHTML = ""; // Clear previous events
-                events.forEach((event, index) => {
-                    const eventElement = document.createElement("div");
-                    eventElement.textContent = event;
-                    if (index < events.length - 1) {
-                        eventElement.innerHTML += "<hr>"; // Add line break if not the last event
-                    }
-                    dayElement.appendChild(eventElement);
-                });
-            }
-        });
-
-        console.log("Events populated successfully.");
-    } catch (error) {
-        console.error("Error populating events:", error);
-    }
-}
-
 const expandedClubViewBackButton = document.getElementById("backButton")
 expandedClubViewBackButton.addEventListener("click", () => {
     // Remove the class from the body when the club view is closed
     document.body.classList.remove("expanded-club-view");
-    
     document.getElementById("expandedClubView").style.display = "none";
 });
 
+// Event listener for the edit club button
+const editClubButton = document.getElementById("editClubButton");
+editClubButton.addEventListener("click", (event) => {
+    // Get the index of the club in the list
+    const clubContainers = document.querySelectorAll(".club-container");
+    
+    // Display the editClubWindow window for editing club information
+    document.getElementById("expandedClubView").style.display = "none";
+    document.getElementById("editClubWindow").style.display = "block";
+
+    // Populate input fields with existing club information
+    const clubNameInput = document.getElementById("editClubName");
+    const clubDescriptionInput = document.getElementById("editClubDescription");
+    const clubContactsInput = document.getElementById("editClubContacts");
+
+    const expandedClubName = document.getElementById("expandedClubName").textContent;
+    const expandedClubDescription = document.getElementById("expandedClubDescription").textContent;
+    const expandedClubContacts = document.getElementById("expandedClubContacts").textContent;
+
+    clubNameInput.value = expandedClubName;
+    clubDescriptionInput.value = expandedClubDescription;
+    clubContactsInput.value = expandedClubContacts;
+});
+
+// Function to save edited club information
+const saveEditedClubInfoButton = document.getElementById("saveEditButton");
+saveEditedClubInfoButton.addEventListener("click", () => {
+    // Get input field values
+    const clubNameInput = document.getElementById("editClubName").value;
+    const clubDescriptionInput = document.getElementById("editClubDescription").value;
+    const clubContactsInput = document.getElementById("editClubContacts").value;
+
+    // Update the club information in the database
+    const clubIndex = indexes[document.getElementById("expandedClubName").textContent];
+    const clubRef = ref(database, `db/students/clubs/${clubIndex}`);
+
+    // Retrieve the existing club data
+    get(clubRef).then((snapshot) => {
+        const existingClubData = snapshot.val();
+
+        // Update only the fields that were edited
+        const updatedClubData = {
+            clubName: clubNameInput || existingClubData.clubName, // Use existing value if input is empty
+            clubDescription: clubDescriptionInput || existingClubData.clubDescription,
+            contacts: clubContactsInput || existingClubData.contacts,
+            logo: existingClubData.logo // Keep the image link the same
+        };
+
+        // Set the updated club data in the database
+        set(clubRef, updatedClubData).then(() => {
+            console.log("Club information updated successfully.");
+            // Close the edit club modal
+            document.getElementById("editClubWindow").style.display = "none";
+        }).catch((error) => {
+            console.error("Error updating club information:", error);
+        });
+    }).catch((error) => {
+        console.error("Error retrieving club information:", error);
+    });
+
+    backFromEdit();
+});
+
+// Function to cancel club edits and close the modal
+const cancelEditButton = document.getElementById("cancelEditButton")
+cancelEditButton.addEventListener("click", () => {
+    backFromEdit();
+});
+
+function backFromEdit() {
+    // Close the edit club modal
+    document.getElementById("editClubWindow").style.display = "none";
+    // Display the expanded club view
+    document.getElementById("expandedClubView").style.display = "block";
+    document.body.classList.add("expanded-club-view");
+}
+
+document.getElementById("editClubWindow").style.display = "none";
 loadClubsByCategory("all")

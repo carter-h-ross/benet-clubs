@@ -147,7 +147,7 @@ button:hover {
 }
 
 /* CSS for expanded club view */
-#expandedClubView {
+#expandedClubView, #editClubWindow{
   position: fixed;
   top:10%;
   left:10%;
@@ -159,7 +159,7 @@ button:hover {
   align-items: center; /* Center vertically */
 }
 
-#expandedClubDetails {
+#expandedClubDetails, #editClubWindow-content {
   /* Match styles with .club-container */
   background: rgba(255, 255, 255, 0.2);
   border-radius: 16px;
@@ -178,27 +178,13 @@ button:hover {
   overflow-y: auto; /* Add vertical scroll if content exceeds */
 }
 
-#expandedClubButtons {
+#expandedClubButtons, .expandedClubButtons {
   margin-top: 20px;
-}
-
-#expandedClubButtons button {
-  margin: 0 10px;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 5px;
-  background-color: #007bff;
-  color: white;
-  cursor: pointer;
-}
-
-#expandedClubButtons button:hover {
-  background-color: #0056b3;
 }
 
 .club-logo-expanded {
   width: 10vw;
-  height: 10vw;
+  height: 10vh;
 }
 
 /* Hide the main content when the club view is expanded */

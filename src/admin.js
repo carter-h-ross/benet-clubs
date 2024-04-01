@@ -77,7 +77,8 @@ submitClubButton.addEventListener("click", async () => {
     const clubName = clubNameInput.value;
     const clubDescription = clubDescriptionInput.value;
     const clubLogoFile = clubLogoInput.files[0];
-    const contacts = contactInput.value;
+    const contacts = clubContactsInput.value; // Corrected variable name
+
     console.log(contacts);
 
     // Upload club logo to Firebase Storage
@@ -109,12 +110,11 @@ submitClubButton.addEventListener("click", async () => {
         clubNameInput.value = "";
         clubDescriptionInput.value = "";
         clubLogoInput.value = "";
-        contactInput.value = "";
+        clubContactsInput.value = ""; // Corrected variable name
     } catch (error) {
         console.error("Error submitting club:", error);
     }
 });
-
 
 // Function to upload image file to Firebase Storage
 async function uploadImageFile(imageFile) {
