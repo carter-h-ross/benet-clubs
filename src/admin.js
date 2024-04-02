@@ -77,7 +77,7 @@ submitClubButton.addEventListener("click", async () => {
     const clubName = clubNameInput.value;
     const clubDescription = clubDescriptionInput.value;
     const clubLogoFile = clubLogoInput.files[0];
-    const contacts = clubContactsInput.value; // Corrected variable name
+    const contacts = Array.from(document.querySelectorAll('#contactList div')).map(item => item.textContent.trim()); // Get the list of contacts
 
     console.log(contacts);
 
@@ -89,7 +89,7 @@ submitClubButton.addEventListener("click", async () => {
         category,
         clubName,
         clubDescription,
-        contacts, // Assuming the current user's email is the contact
+        contacts,
         logo: logoDownloadURL || "", // Use the download URL if available, otherwise an empty string
     };
 
@@ -110,7 +110,7 @@ submitClubButton.addEventListener("click", async () => {
         clubNameInput.value = "";
         clubDescriptionInput.value = "";
         clubLogoInput.value = "";
-        clubContactsInput.value = ""; // Corrected variable name
+        document.getElementById('contactList').innerHTML = ''; // Clear contact list
     } catch (error) {
         console.error("Error submitting club:", error);
     }

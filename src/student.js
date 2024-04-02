@@ -68,8 +68,22 @@ async function loadClubsByCategory(category) {
                 // Create and append club details
                 const clubDetails = document.createElement("div");
                 clubDetails.innerHTML = `<h2>${club.clubName}</h2>
-                                         <p class = "hidden">${club.clubDescription}</p>
-                                         <p>Contact: ${club.contacts}</p>`;
+                                         <p class="hidden">${club.clubDescription}</p>
+                                         <p>Contact:</p>`;
+
+                // Create a list element for contacts
+                const contactsList = document.createElement("ul");
+
+                // Iterate over each contact and create list items
+                club.contacts.forEach(contact => {
+                    const contactItem = document.createElement("li");
+                    contactItem.textContent = contact;
+                    contactsList.appendChild(contactItem);
+                });
+
+                // Append the contacts list to clubDetails
+                clubDetails.appendChild(contactsList);
+
                 clubContainer.appendChild(clubDetails);
 
                 clubsContainer.appendChild(clubContainer);
@@ -136,28 +150,48 @@ function expandClubView(clubContainer) {
     // Add a class to the body to indicate that the club view is expanded
     document.body.classList.add("expanded-club-view");
 
-    console.log(clubContainer);
+    // Get the club name from the clicked container
     const clubName = clubContainer.querySelector("h2").textContent;
-    const paragraphs = clubContainer.querySelectorAll("p");
-    const clubDescription = paragraphs[0].textContent;
-    const clubContacts = paragraphs[1].textContent;
 
-    console.log(clubName);
-    console.log(paragraphs);
-    console.log(clubDescription);
-    console.log(clubContacts);
+    // Retrieve the index of the club
+    const clubIndex = indexes[clubName];
 
-    document.getElementById("expandedClubName").textContent = clubName;
-    document.getElementById("expandedClubDescription").textContent = clubDescription;
-    document.getElementById("expandedClubContacts").textContent = clubContacts;
+    // Get the club details from the database based on the index
+    const clubRef = ref(database, `db/students/clubs/${clubIndex}`);
+    get(clubRef)
+        .then((snapshot) => {
+            const clubData = snapshot.val();
+            if (clubData) {
+                // Update the club name and description in the expanded view
+                document.getElementById("expandedClubName").textContent = clubData.clubName;
+                document.getElementById("expandedClubDescription").textContent = clubData.clubDescription;
 
-    // Create and append club logo to the expanded club view
-    const clubLogo = document.createElement("img");
-    clubLogo.classList.add("club-logo-expanded");
-    clubLogo.src = clubContainer.querySelector(".club-logo").src; // Get the source from the clicked club container
-    document.getElementById("expandedClubDetails").prepend(clubLogo);
+                // Clear existing contacts
+                const contactsList = document.getElementById("expandedClubContacts");
+                contactsList.innerHTML = "";
 
-    document.getElementById("expandedClubView").style.display = "block";
+                // Populate contacts as a list
+                clubData.contacts.forEach(contact => {
+                    const contactItem = document.createElement("li");
+                    contactItem.textContent = contact;
+                    contactsList.appendChild(contactItem);
+                });
+
+                // Create and append club logo to the expanded club view
+                const clubLogo = document.createElement("img");
+                clubLogo.classList.add("club-logo-expanded");
+                clubLogo.src = clubData.logo;
+                document.getElementById("expandedClubDetails").prepend(clubLogo);
+
+                // Display the expanded club view
+                document.getElementById("expandedClubView").style.display = "block";
+            } else {
+                console.error("Club data not found for index:", clubIndex);
+            }
+        })
+        .catch((error) => {
+            console.error("Error retrieving club information:", error);
+        });
 }
 
 const expandedClubViewBackButton = document.getElementById("backButton")
@@ -167,9 +201,9 @@ expandedClubViewBackButton.addEventListener("click", () => {
     document.getElementById("expandedClubView").style.display = "none";
 });
 
-// Event listener for the edit club button
+/// Event listener for the edit club button
 const editClubButton = document.getElementById("editClubButton");
-editClubButton.addEventListener("click", (event) => {
+editClubButton.addEventListener("click", async (event) => {
     // Get the index of the club in the list
     const clubContainers = document.querySelectorAll(".club-container");
     
@@ -177,18 +211,42 @@ editClubButton.addEventListener("click", (event) => {
     document.getElementById("expandedClubView").style.display = "none";
     document.getElementById("editClubWindow").style.display = "block";
 
-    // Populate input fields with existing club information
-    const clubNameInput = document.getElementById("editClubName");
-    const clubDescriptionInput = document.getElementById("editClubDescription");
-    const clubContactsInput = document.getElementById("editClubContacts");
-
+    // Retrieve the club name from the expanded view
     const expandedClubName = document.getElementById("expandedClubName").textContent;
-    const expandedClubDescription = document.getElementById("expandedClubDescription").textContent;
-    const expandedClubContacts = document.getElementById("expandedClubContacts").textContent;
 
-    clubNameInput.value = expandedClubName;
-    clubDescriptionInput.value = expandedClubDescription;
-    clubContactsInput.value = expandedClubContacts;
+    // Retrieve the index of the club
+    const clubIndex = indexes[expandedClubName];
+
+    // Get the club details from the database based on the index
+    const clubRef = ref(database, `db/students/clubs/${clubIndex}`);
+    try {
+        const snapshot = await get(clubRef);
+        const clubData = snapshot.val();
+
+        if (clubData) {
+            // Populate input fields with existing club information
+            const clubNameInput = document.getElementById("editClubName");
+            const clubDescriptionInput = document.getElementById("editClubDescription");
+
+            clubNameInput.value = clubData.clubName;
+            clubDescriptionInput.value = clubData.clubDescription;
+
+            // Clear existing contacts
+            const contactsList = document.getElementById("editClubContactsList");
+            contactsList.innerHTML = "";
+
+            // Populate contacts as a list
+            clubData.contacts.forEach(contact => {
+                const contactItem = document.createElement("li");
+                contactItem.textContent = contact;
+                contactsList.appendChild(contactItem);
+            });
+        } else {
+            console.error("Club data not found for index:", clubIndex);
+        }
+    } catch (error) {
+        console.error("Error retrieving club information:", error);
+    }
 });
 
 // Function to save edited club information
@@ -197,7 +255,10 @@ saveEditedClubInfoButton.addEventListener("click", () => {
     // Get input field values
     const clubNameInput = document.getElementById("editClubName").value;
     const clubDescriptionInput = document.getElementById("editClubDescription").value;
-    const clubContactsInput = document.getElementById("editClubContacts").value;
+
+    // Get the list of contacts
+    const contactsListItems = document.querySelectorAll("#editClubContactsList li");
+    const contacts = Array.from(contactsListItems).map(item => item.textContent);
 
     // Update the club information in the database
     const clubIndex = indexes[document.getElementById("expandedClubName").textContent];
@@ -211,7 +272,7 @@ saveEditedClubInfoButton.addEventListener("click", () => {
         const updatedClubData = {
             clubName: clubNameInput || existingClubData.clubName, // Use existing value if input is empty
             clubDescription: clubDescriptionInput || existingClubData.clubDescription,
-            contacts: clubContactsInput || existingClubData.contacts,
+            contacts: contacts || existingClubData.contacts,
             logo: existingClubData.logo // Keep the image link the same
         };
 
@@ -228,6 +289,32 @@ saveEditedClubInfoButton.addEventListener("click", () => {
     });
 
     backFromEdit();
+});
+
+// Function to handle adding a new contact
+const addContactButton = document.getElementById("addContactButton");
+addContactButton.addEventListener("click", () => {
+    const newContactInput = document.getElementById("editClubContactInput").value;
+    const contactsList = document.getElementById("editClubContactsList");
+
+    // Create list item for the new contact
+    const contactItem = document.createElement("li");
+    contactItem.textContent = newContactInput;
+
+    // Append the new contact to the list
+    contactsList.appendChild(contactItem);
+
+    // Clear the input field
+    document.getElementById("editClubContactInput").value = "";
+});
+
+// Function to handle removing a contact
+const editClubContactsList = document.getElementById("editClubContactsList");
+editClubContactsList.addEventListener("click", (event) => {
+    if (event.target.tagName === "LI") {
+        // Remove the clicked contact from the list
+        event.target.remove();
+    }
 });
 
 // Function to cancel club edits and close the modal
