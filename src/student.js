@@ -1,3 +1,7 @@
+// get user email when visiting page
+const userEmail = localStorage.getItem('userEmail');
+console.log(userEmail);
+
 console.log("student.js file");
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
@@ -69,14 +73,15 @@ async function loadClubsByCategory(category) {
                 const clubDetails = document.createElement("div");
                 clubDetails.innerHTML = `<h2>${club.clubName}</h2>
                                          <p class="hidden">${club.clubDescription}</p>
-                                         <p>Contact:</p>`;
+                                         <h3>Contact:</h3>`;
 
                 // Create a list element for contacts
-                const contactsList = document.createElement("ul");
+                const contactsList = document.createElement("p");
 
                 // Iterate over each contact and create list items
                 club.contacts.forEach(contact => {
-                    const contactItem = document.createElement("li");
+                    const contactItem = document.createElement("p");
+                    contactItem.classList.add('contacts-list')
                     contactItem.textContent = contact;
                     contactsList.appendChild(contactItem);
                 });
@@ -140,6 +145,24 @@ function setupClubContainerListeners() {
     });
 }
 
+// Function to display user email and handle logout
+function displayUserInfo() {
+    // Add event listener to logout button
+    logoutButton.addEventListener("click", () => {
+        // Sign out user
+        auth.signOut().then(() => {
+            // Redirect to index page after logout
+            window.location.href = "index.html";
+        }).catch((error) => {
+            console.error("Error signing out:", error);
+        });
+    });
+}
+
+// Call displayUserInfo function to initialize user info display and logout functionality
+displayUserInfo();
+
+
 function expandClubView(clubContainer) {
     // Remove any existing club logo from the expanded club view
     const existingClubLogo = document.querySelector(".club-logo-expanded");
@@ -201,15 +224,36 @@ expandedClubViewBackButton.addEventListener("click", () => {
     document.getElementById("expandedClubView").style.display = "none";
 });
 
-/// Event listener for the edit club button
+// Function to check if user's email is in the contacts list or trusted emails list
+async function isUserAuthorized(userEmail, contactsList, database) {
+    // Retrieve the trusted emails list from the database
+    try {
+        const trustedEmailsRef = ref(database, 'db/general/trustedEmails');
+        const trustedEmailsSnapshot = await get(trustedEmailsRef);
+        const trustedEmailsList = trustedEmailsSnapshot.val();
+
+        if (contactsList.includes(userEmail)) {
+            console.log("User is authorized because their email is in the contacts list.");
+            return true;
+        } else if (trustedEmailsList && trustedEmailsList.includes(userEmail)) {
+            console.log("User is authorized because their email is in the trusted emails list.");
+            return true;
+        } else {
+            console.log("User is not authorized.");
+            alert("You are not authorized to edit the information of this club");
+            return false;
+        }
+    } catch (error) {
+        console.error("Error retrieving trusted emails list:", error);
+        return false;
+    }
+}
+
+// Event listener for the edit club button
 const editClubButton = document.getElementById("editClubButton");
 editClubButton.addEventListener("click", async (event) => {
-    // Get the index of the club in the list
-    const clubContainers = document.querySelectorAll(".club-container");
-    
-    // Display the editClubWindow window for editing club information
-    document.getElementById("expandedClubView").style.display = "none";
-    document.getElementById("editClubWindow").style.display = "block";
+    // Get the user's email
+    const userEmail = localStorage.getItem('userEmail');
 
     // Retrieve the club name from the expanded view
     const expandedClubName = document.getElementById("expandedClubName").textContent;
@@ -224,23 +268,35 @@ editClubButton.addEventListener("click", async (event) => {
         const clubData = snapshot.val();
 
         if (clubData) {
-            // Populate input fields with existing club information
-            const clubNameInput = document.getElementById("editClubName");
-            const clubDescriptionInput = document.getElementById("editClubDescription");
+            // Check if the user's email is authorized to edit the club
+            const userAuthorized = await isUserAuthorized(userEmail, clubData.contacts, database);
+            
+            if (userAuthorized) {
+                // Proceed with editing the club
+                document.getElementById("expandedClubView").style.display = "none";
+                document.getElementById("editClubWindow").style.display = "block";
 
-            clubNameInput.value = clubData.clubName;
-            clubDescriptionInput.value = clubData.clubDescription;
+                // Populate input fields with existing club information
+                const clubNameInput = document.getElementById("editClubName");
+                const clubDescriptionInput = document.getElementById("editClubDescription");
 
-            // Clear existing contacts
-            const contactsList = document.getElementById("editClubContactsList");
-            contactsList.innerHTML = "";
+                clubNameInput.value = clubData.clubName;
+                clubDescriptionInput.value = clubData.clubDescription;
 
-            // Populate contacts as a list
-            clubData.contacts.forEach(contact => {
-                const contactItem = document.createElement("li");
-                contactItem.textContent = contact;
-                contactsList.appendChild(contactItem);
-            });
+                // Clear existing contacts
+                const contactsList = document.getElementById("editClubContactsList");
+                contactsList.innerHTML = "";
+
+                // Populate contacts as a list
+                clubData.contacts.forEach(contact => {
+                    const contactItem = document.createElement("li");
+                    contactItem.textContent = contact;
+                    contactsList.appendChild(contactItem);
+                });
+            } else {
+                // User is not authorized to edit the club
+                alert("You are not authorized to edit this club.");
+            }
         } else {
             console.error("Club data not found for index:", clubIndex);
         }
@@ -333,3 +389,25 @@ function backFromEdit() {
 
 document.getElementById("editClubWindow").style.display = "none";
 loadClubsByCategory("all")
+
+// Function to reorder clubs alphabetically in the database
+async function reorderClubsAlphabetically() {
+    try {
+        // Get the current list of clubs from the database
+        const clubsSnapshot = await get(ref(database, 'db/students/clubs'));
+        let clubsList = clubsSnapshot.val() || []; // If no clubs exist, start with an empty array
+
+        // Sort the clubs alphabetically by club name
+        clubsList.sort((a, b) => a.clubName.localeCompare(b.clubName));
+
+        // Update the list of clubs in the database
+        await set(ref(database, 'db/students/clubs'), clubsList);
+
+        console.log("Clubs reordered alphabetically successfully.");
+    } catch (error) {
+        console.error("Error reordering clubs alphabetically:", error);
+    }
+}
+
+// called whenever somen visits website to make sure club are re ordered
+//reorderClubsAlphabetically()

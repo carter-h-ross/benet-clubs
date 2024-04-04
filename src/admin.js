@@ -1,7 +1,7 @@
 // Import the necessary functions from the Firebase SDK
 import { initializeApp } from "firebase/app";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { getDatabase, ref, set,get, push, child } from "firebase/database";
+import { getDatabase, ref, set,get, push, child} from "firebase/database";
 import { getStorage, ref as storageRef, uploadBytes , getDownloadURL} from "firebase/storage";
 import { getAuth } from "firebase/auth";
 
@@ -101,6 +101,9 @@ submitClubButton.addEventListener("click", async () => {
         // Append the new club to the existing list
         clubsList.push(newClub);
 
+        // Sort the clubs alphabetically by club name
+        clubsList.sort((a, b) => a.clubName.localeCompare(b.clubName));
+
         // Update the list of clubs in the database
         await set(ref(database, 'db/students/clubs'), clubsList);
 
@@ -115,6 +118,25 @@ submitClubButton.addEventListener("click", async () => {
         console.error("Error submitting club:", error);
     }
 });
+
+// Function to reorder clubs alphabetically in the database
+async function reorderClubsAlphabetically() {
+    try {
+        // Get the current list of clubs from the database
+        const clubsSnapshot = await get(ref(database, 'db/students/clubs'));
+        let clubsList = clubsSnapshot.val() || []; // If no clubs exist, start with an empty array
+
+        // Sort the clubs alphabetically by club name
+        clubsList.sort((a, b) => a.clubName.localeCompare(b.clubName));
+
+        // Update the list of clubs in the database
+        await set(ref(database, 'db/students/clubs'), clubsList);
+
+        console.log("Clubs reordered alphabetically successfully.");
+    } catch (error) {
+        console.error("Error reordering clubs alphabetically:", error);
+    }
+}
 
 // Function to upload image file to Firebase Storage
 async function uploadImageFile(imageFile) {
@@ -175,3 +197,6 @@ addNewTrustedEmailButton.addEventListener("click", async () => {
         console.error("Error adding new trusted email:", error);
     }
 });
+
+// called whenever somen visits website to make sure club are re ordered
+//reorderClubsAlphabetically()

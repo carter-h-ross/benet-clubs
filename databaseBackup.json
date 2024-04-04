@@ -1,0 +1,137 @@
+{
+    "db": {
+      "admins": {
+        "clubProposals": [
+          {
+            "category": "category 1",
+            "clubDescription": "This is a description of the third club. This club meets on fridays after school",
+            "clubName": "club 3",
+            "contacts": [
+              "4carter.ross@benet.org"
+            ],
+            "logo": "gs://benet-clubs.appspot.com/test-1.jpg"
+          },
+          {
+            "category": "category 2",
+            "clubDescription": "This is a description of the fourth club. This club meets on fridays after school",
+            "clubName": "club 4",
+            "contacts": [
+              "4carter.ross@benet.org"
+            ],
+            "logo": "gs://benet-clubs.appspot.com/test-2.jpg"
+          }
+        ],
+        "nextWeekEventProposals": {
+          "fri": [
+            "event 1",
+            "event 2"
+          ],
+          "mon": [
+            "event 1",
+            "event 2"
+          ],
+          "sat": [
+            "event 1",
+            "event 2"
+          ],
+          "sun": [
+            "event 1",
+            "event 2"
+          ],
+          "thu": [
+            "event 1",
+            "event 2"
+          ],
+          "tue": [
+            "event 1",
+            "event 2"
+          ],
+          "wed": [
+            "event 1",
+            "event 2"
+          ]
+        }
+      },
+      "general": {
+        "clubCategories": [
+          "category 1",
+          "category 2"
+        ],
+        "trustedEmails": [
+          "carter.h.ross.5176@gmail.com",
+          "4carter.ross@benet.org",
+          "sfrey@benet.org"
+        ],
+        "weeklySchedule": {
+          "fri": [
+            "event 1",
+            "event 2"
+          ],
+          "mon": [
+            "event 1",
+            "event 2"
+          ],
+          "sat": [
+            "event 1",
+            "event 2"
+          ],
+          "sun": [
+            "event 1",
+            "event 2"
+          ],
+          "thu": [
+            "event 1",
+            "event 2"
+          ],
+          "tue": [
+            "event 1",
+            "event 2"
+          ],
+          "wed": [
+            "event 1",
+            "event 2"
+          ]
+        }
+      },
+      "students": {
+        "clubs": [
+          {
+            "category": "category 2",
+            "clubDescription": "The description for bowling club",
+            "clubName": "Bowling Club",
+            "contacts": [
+              "4christopher.charles@benet.org"
+            ],
+            "logo": "https://firebasestorage.googleapis.com/v0/b/benet-clubs.appspot.com/o/images%2Ftest-1.jpg?alt=media&token=18c5ba83-2651-4180-9f21-016b1641f1f8"
+          },
+          {
+            "category": "category 1",
+            "clubDescription": "The description for car club",
+            "clubName": "Car Club",
+            "contacts": [
+              "4jonah.koplinski@benet.org"
+            ],
+            "logo": "https://firebasestorage.googleapis.com/v0/b/benet-clubs.appspot.com/o/images%2FIMG-1027.jpg?alt=media&token=8b8304d2-4f7f-4270-bf24-3dd48e4fd76e"
+          },
+          {
+            "category": "category 1",
+            "clubDescription": "The description for coding club",
+            "clubName": "coding club",
+            "contacts": [
+              "4carter.ross@benet.org"
+            ],
+            "logo": "https://firebasestorage.googleapis.com/v0/b/benet-clubs.appspot.com/o/images%2FScreenshot%202024-01-01%20222100.png?alt=media&token=8a8a14f5-19a6-414d-ae87-9bbfbbd47c1d"
+          },
+          {
+            "category": "category 2",
+            "clubDescription": "The description for robotics",
+            "clubName": "Robotics",
+            "contacts": [
+              "5matthew.budd@benet.org"
+            ],
+            "logo": "https://firebasestorage.googleapis.com/v0/b/benet-clubs.appspot.com/o/images%2FBirdbot-1.png?alt=media&token=8f3c3351-7c89-4fb9-aa27-15411825ca77"
+          }
+        ]
+      }
+    }
+  }
