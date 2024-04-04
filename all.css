@@ -1,0 +1,427 @@
+/* CSS code for JavaScript code */
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+  
+    margin: 0;
+    padding: 0;
+    background-color: rgb(244, 93, 93); /* Set page background color to red */
+  }
+  
+  /* Club Container Styles */
+  #clubsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* Adjusted to auto-fit with a minimum width of 300px */
+  gap: 20px; /* Adjust gap between club divs */
+  padding: 20px; /* Add padding */
+  max-width: 90vw; /* Set maximum width to 90% of viewport width */
+  margin: 0 auto; /* Center the container horizontally */
+  }
+  
+  /* Styles for club container */
+  .club-container {
+    /* From https://css.glass */
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 20px; /* Add padding */
+    border-radius: 10px; /* Add border radius */
+    box-shadow: 5px 5px 5px rgb(178, 176, 176);
+    display: flex;
+    align-items: center;
+    margin-bottom: 2vh;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .club-container:hover {
+    transform: scale(1.03); /* Scale the container to appear larger */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); /* Increase box shadow */
+  }
+  
+  /* Styles for club logo */
+  .club-logo {
+    width: 10vw;
+    height: 10vw;
+    margin-right: 2vw;
+  }
+  
+  /* Styles for club details */
+  .club-details {
+    flex: 1;
+  }
+  
+  /* Styles for main title */
+  #mainTitle {
+    text-align: center;
+    font-size: 2.4vh;
+    margin-bottom: 2vh;
+  }
+  
+  /* Global Styles */
+  body {
+    font-family: Arial, sans-serif;
+    
+  }
+  
+  /* Events Container Styles */
+  #eventsContainer {
+    margin-top: 1vh;
+  }
+  
+  #logoutButton, #userEmail, #signInButton {
+  margin-top: 5px;
+  margin-left: 5px;
+  }
+  
+  button {
+    background: #d93434;
+    background-image: -webkit-linear-gradient(top, #d93434, #3b282c);
+    background-image: -moz-linear-gradient(top, #d93434, #3b282c);
+    background-image: -ms-linear-gradient(top, #d93434, #3b282c);
+    background-image: -o-linear-gradient(top, #d93434, #3b282c);
+    background-image: linear-gradient(to bottom, #d93434, #3b282c);
+    -webkit-border-radius: 28;
+    -moz-border-radius: 28;
+    border-radius: 28px;
+    font-family: Arial;
+    color: #ffffff;
+    font-size: 20px;
+    padding: 10px 20px 10px 20px;
+    border: solid #1f628d 0px;
+    margin-left: 10px;
+    margin-right: 10px;
+    text-decoration: none;
+  }  
+  button:hover {
+    background: #d93434;
+    background-image: -webkit-linear-gradient(top, #3b282c, #d93434);
+    background-image: -moz-linear-gradient(top, #3b282c, #d93434);
+    background-image: -ms-linear-gradient(top, #3b282c, #d93434);
+    background-image: -o-linear-gradient(top, #3b282c, #d93434);
+    background-image: linear-gradient(to bottom, #3b282c, #d93434);
+    text-decoration: none;
+  }
+  
+  #mainTitle {
+    text-align: center;
+  }
+  
+  /* Table Title Styles */
+  #tableTitleDiv {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 3vh;
+  }
+  
+  label {
+    margin-left: 10px;
+  }
+  
+  #mon,
+  #tue,
+  #wed,
+  #thu,
+  #fri,
+  #sat,
+  #sun {
+    /* From https://css.glass */
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 3vh;
+  
+    border-radius: 5px;
+    margin-left: 2%;
+    margin-right: 2%;
+    margin-bottom: 2vh;
+  }
+  
+  .pointer:hover {
+  cursor:pointer;
+  }
+  .no-drop {
+  cursor: no-drop;
+  }
+  
+  /* CSS for expanded club view */
+  #expandedClubView, #editClubWindow{
+  position: fixed;
+  top:10%;
+  left:10%;
+  width: 80%;
+  height: 80%;
+  z-index: 9999; /* Ensure it's above other elements */
+  display: flex;
+  justify-content: center; /* Center horizontally */
+  align-items: center; /* Center vertically */
+  }
+
+  #requestClubWindow {
+    width: 30%;
+    left: 35%;
+  }
+
+  #requestClubWindow .select {
+    width: 60%
+  }
+
+  .smallText {
+    font-size: 1vh;
+  }
+
+  .margin-top {
+    margin-top: 10px;
+  }
+  
+  #expandedClubDetails, #editClubWindow-content {
+  /* Match styles with .club-container */
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 5px 5px 5px rgb(178, 176, 176);
+  display: flex;
+  flex-direction: column; /* Align content in column */
+  align-items: center; /* Center horizontally */
+  max-width: 100%; /* Take up maximum 80% of the screen */
+  height: 75%; /* Take up 80% of the screen vertically */
+  overflow-y: auto; /* Add vertical scroll if content exceeds */
+  }
+  
+  #expandedClubButtons, .expandedClubButtons {
+  margin-top: 20px;
+  }
+  
+  .club-logo-expanded {
+  max-width: 50%;
+  max-height: 50%;
+  }
+  
+  /* Hide the main content when the club view is expanded */
+  body.expanded-club-view #clubsContainer,
+  body.expanded-club-view #eventsContainer {
+  display: none;
+  }
+  
+  .hidden {
+  display: none;
+  }
+  
+  .contacts-list {
+  font-size: 10px; /* Adjust the font size here */
+  display: flex;
+    flex-direction: column;
+    align-items: left; 
+  }
+
+  /* CSS code for JavaScript code */
+/* Global Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: rgb(244, 93, 93); /* Set page background color to red */
+}
+
+button {
+    background: #d93434;
+    background-image: -webkit-linear-gradient(top, #d93434, #3b282c);
+    background-image: -moz-linear-gradient(top, #d93434, #3b282c);
+    background-image: -ms-linear-gradient(top, #d93434, #3b282c);
+    background-image: -o-linear-gradient(top, #d93434, #3b282c);
+    background-image: linear-gradient(to bottom, #d93434, #3b282c);
+    -webkit-border-radius: 28;
+    -moz-border-radius: 28;
+    border-radius: 28px;
+    font-family: Arial;
+    color: #ffffff;
+    font-size: 20px;
+    padding: 10px 20px 10px 20px;
+    border: solid #1f628d 0px;
+    text-decoration: none;
+}  
+button:hover {
+    background: #d93434;
+    background-image: -webkit-linear-gradient(top, #3b282c, #d93434);
+    background-image: -moz-linear-gradient(top, #3b282c, #d93434);
+    background-image: -ms-linear-gradient(top, #3b282c, #d93434);
+    background-image: -o-linear-gradient(top, #3b282c, #d93434);
+    background-image: linear-gradient(to bottom, #3b282c, #d93434);
+    text-decoration: none;
+}
+
+.pointer:hover {
+    cursor:pointer;
+}
+.no-drop {
+    cursor: no-drop;
+}
+
+#goToStudentPage {
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+.main-menu {
+    position: fixed;
+    top: 10%;
+    bottom: 9%;
+    left: 3%;
+    width: 18%;
+    height: 80%;
+    /* From https://css.glass */
+
+    /*background: rgba(147, 154, 208, 0.57);*/
+    background: rgba(255, 255, 255, 0.57);
+    
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(12.1px);
+    -webkit-backdrop-filter: blur(12.1px);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-menu-right {
+    position: fixed;
+    top: 10%;
+    bottom: 9%;
+    right: 3%;
+    width: 18%;
+    height: 80%;
+    /* From https://css.glass */
+
+    /*background: rgba(147, 154, 208, 0.57);*/
+    background: rgba(255, 255, 255, 0.57);
+    
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(12.1px);
+    -webkit-backdrop-filter: blur(12.1px);
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.main-menu-input { 
+    font-size:16px; 
+    border-style:inset; 
+    border-color:#a8a8a8; 
+    text-align:left; 
+    border-width:1px; 
+    border-radius:8px; 
+    box-shadow: 2px 4px 12px 0px rgba(0,0,0,.72); 
+    text-shadow:0px 0px 0px rgba(42,42,42,.75); 
+    font-weight:normal; font-family:sans-serif; 
+    padding:6px;  
+    margin-bottom: 10px;
+}
+
+.description-input {
+    font-size:16px; 
+    border-style:inset; 
+    border-color:#a8a8a8; 
+    text-align:left; 
+    border-width:1px; 
+    border-radius:8px; 
+    box-shadow: 2px 4px 12px 0px rgba(0,0,0,.72); 
+    text-shadow:0px 0px 0px rgba(42,42,42,.75); 
+    font-weight:normal; font-family:sans-serif; 
+    padding:6px;  
+    margin-bottom: 10px;
+}
+.description-input:hover {
+    overflow-y: auto; /* show scrollbar on hover */
+}
+.description-input {
+    width: 100%;
+    margin-top: 5px;
+    display: flex;
+    justify-content: center;
+}
+.send-button-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 5px;
+}
+.description-input input {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+.main-menu-input:focus { 
+    outline:none; 
+}  
+
+.select {
+    position: relative;
+    display: flex;
+    margin-top: 10px;
+}    .select select {
+        font-family: Arial;
+        font-size:15px;
+        font-weight:bold;
+        text-align: left;
+        text-decoration:none;
+        text-shadow:0px 1px 0px rgb(116, 76, 85);
+        display: flex;
+        width: 100%;
+        cursor: pointer;
+        padding: 7px 40px;
+        outline: 0;
+        border: 0px solid #d93434;
+        border-radius: 6px;
+        background:linear-gradient(to bottom, #d93434 5%, #3b282c 100%);
+        background-color:#d93434;
+        color: #ffffff;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+    }
+        .select select::-ms-expand {
+            display: none;
+            text-align: left;
+        }
+        .select select:hover,
+        .select select:focus {
+            color: #ffffff;
+            background:linear-gradient(to bottom, #3b282c 5%, #d93434 100%);
+            background-color:#3b282c;
+        }
+        .select select:disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+.select_arrow {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    pointer-events: none;
+    border-style: solid;
+    border-width: 8px 5px 0px 5px;
+    border-color: #ffffff transparent transparent transparent;
+}
+.select select:hover ~ .select_arrow,
+.select select:focus ~ .select_arrow {
+    border-top-color: #ffffff;
+}
+.select select:disabled ~ .select_arrow {
+    border-top-color: #ffffff;
+}

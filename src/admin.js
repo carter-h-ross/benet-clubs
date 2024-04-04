@@ -17,6 +17,8 @@ const firebaseConfig = {
     measurementId: "G-BP4ELWR5P3"
 };
 
+document.querySelector("body").style.fontSize = "1vh";
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 // Initialize Firebase Storage

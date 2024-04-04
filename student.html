@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="student.css">
+    <link rel="stylesheet" href="all.css">
     <title>benet clubs</title>
 </head>
 <body>
@@ -71,18 +71,41 @@
 
     <!-- Edit Club Window -->
     <div id="editClubWindow" class="modal">
+        <h2>Edit Club Information:</h2>
         <div id="editClubWindow-content">
-            <h2>Edit Club Information</h2>
             <label for="editClubName">Club Name:</label>
-            <input type="text" id="editClubName" required><br><br>
+            <input type="text" id="editClubName" class="main-menu-input" required>
             <label for="editClubDescription">Club Description:</label>
-            <textarea id="editClubDescription" rows="4" required></textarea><br><br>
-            <input type="text" id="editClubContactInput" placeholder="Add new contact">
+            <textarea id="editClubDescription" class="main-menu-input" rows="4" required></textarea> <br>
+            <input type="text" id="editClubContactInput" class="main-menu-input" placeholder="Add new contact">
             <button id="addContactButton" class="expandedClubButtons pointer">Add Contact</button>
-            <ul id="editClubContactsList"></ul><br><br>
+            <ul id="editClubContactsList"></ul>
             <button id="saveEditButton" class="expandedClubButtons pointer">Save</button>
             <button id="cancelEditButton" class="expandedClubButtons pointer">Cancel</button>
         </div>
+    </div>
+
+    <div id="requestClubWindow" class="main-menu smallText">
+        <h1>club category:</h1>
+        <div class="select">
+            <select id="clubCategoryInput">
+                <option>options will be placed here</option>
+                <div class="select_arrow">
+                </div>
+            </select>
+        </div>
+        <h1>club name:</h1>
+        <input id="clubNameInput" class="main-menu-input" type="text">
+        <h1>club description:</h1>
+        <input id="clubDescriptionInput" class="main-menu-input" type="text">
+        <h1>club contacts:</h1>
+        <input type="text" id="clubContactsInput" class="main-menu-input" placeholder="Enter contact email">
+        <button id="addContactButton" class="pointer">Add Contact</button>
+        <div id="contactList"></div>
+        <h1>upload club logo:</h1>
+        <input id="clubLogoInput" type="file">
+        <button id="submitClubButton" class="pointer margin-top" type="submit">request club</button>
+        <button id="requestBackButton" class="pointer margin-top">cancel</button>
     </div>
 
     <script src="student-build.js"></script>

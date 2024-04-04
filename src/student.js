@@ -102,9 +102,20 @@ async function loadClubsByCategory(category) {
     }
 }
 
+const requestClubWindow = document.getElementById("requestClubWindow");
+const requestClubWindowButton = document.getElementById("requestClubButton");
+const requestBackButton = document.getElementById("requestBackButton");
+requestClubWindowButton.addEventListener("click", function() {
+    requestClubWindow.style.display = "block";
+})
+requestBackButton.addEventListener("click",function() {
+    requestClubWindow.style.display = "none"
+})
+
 // loading content to the database when the website is loaded
 document.addEventListener("DOMContentLoaded", function() {
     populateEvents();
+    requestClubWindow.style.display = "none";
 });
 
 async function populateEvents() {
