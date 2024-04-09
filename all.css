@@ -219,7 +219,8 @@ body {
   /* Hide the main content when the club view is expanded */
   body.expanded-club-view #clubsContainer,
   body.expanded-club-view #tableTitleDiv,
-  body.expanded-club-view #eventsContainer {
+  body.expanded-club-view #eventsContainer,
+  body.expanded-club-view #clubCategoryInput {
   display: none;
   }
   
@@ -491,6 +492,101 @@ button:hover {
 /* Hide the main content when the event view is expanded */
 body.expanded-event-view #clubsContainer,
 body.expanded-event-view #tableTitleDiv,
-body.expanded-event-view #eventsContainer {
+body.expanded-event-view #eventsContainer,
+body.expanded-event-view #clubCategoryInput {
     display: none;
 }
+
+/* Styles for club category dropdown menu */
+#clubCategoryInput {
+  position: relative;
+  left: 25%;
+  width: 50%;
+  z-index: 999; /* Ensure it's above other elements */
+  display: flex;
+  justify-content: center; /* Center horizontally */
+}
+
+#clubCategoryInput {
+  font-family: Arial;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration: none;
+  display: flex;
+  width: 50%;
+  cursor: pointer;
+  padding: 10px 20px;
+  outline: none;
+  border: 0px solid #d93434;
+  border-radius: 28px;
+  background: linear-gradient(to bottom, #d93434, #3b282c);
+  background-color: #d93434;
+  color: #ffffff;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+}
+
+#clubCategoryInput:hover,
+#clubCategoryInput:focus {
+  color: #ffffff;
+  background: linear-gradient(to bottom, #3b282c, #d93434);
+  background-color: #3b282c;
+}
+
+#clubCategoryInput:disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Dropdown arrow */
+#clubCategoryInput .select_arrow {
+  position: relative;
+  top: calc(50% - 4px);
+  right: 20px;
+  pointer-events: none;
+  border-style: solid;
+  border-width: 8px 5px 0px 5px;
+  border-color: #ffffff transparent transparent transparent;
+}
+
+#clubCategoryInput select:hover ~ .select_arrow,
+#clubCategoryInput select:focus ~ .select_arrow {
+  border-top-color: #ffffff;
+}
+
+#clubCategoryInput select:disabled ~ .select_arrow {
+  border-top-color: #ffffff;
+}
+
+/* Style the select element */
+.select-arrow {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: #fff;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%23666" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="6 9 12 15 18 9"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding: 8px 32px 8px 8px; /* Adjust as needed */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  line-height: 1.5;
+  color: #333;
+  outline: none;
+  cursor: pointer;
+}
+
+/* Hide the default arrow */
+.select-arrow::-ms-expand {
+  display: none;
+}
+
+/* Style the options if needed */
+.select-arrow option {
+  background-color: #fff;
+  color: #333;
+}
+

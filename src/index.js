@@ -83,80 +83,6 @@ auth.onAuthStateChanged(user => {
     }
 });
 
-async function fillDatabase() {
-    try {
-
-        // Define the template structure
-        const templateData = {
-            db: {
-                general: {
-                    clubCategories: ["category 1", "category 2"],
-                    weeklySchedule: {
-                        mon: ["event 1", "event 2"],
-                        tue: ["event 1", "event 2"],
-                        wed: ["event 1", "event 2"],
-                        thu: ["event 1", "event 2"],
-                        fri: ["event 1", "event 2"],
-                        sat: ["event 1", "event 2"],
-                        sun: ["event 1", "event 2"],
-                    },
-                    trustedEmails: ["carter.h.ross.5176@gmail.com", "4carter.ross@benet.org", "sfrey@benet.org"],
-                },
-                admins: {
-                    nextWeekEventProposals: {
-                        mon: ["event 1", "event 2"],
-                        tue: ["event 1", "event 2"],
-                        wed: ["event 1", "event 2"],
-                        thu: ["event 1", "event 2"],
-                        fri: ["event 1", "event 2"],
-                        sat: ["event 1", "event 2"],
-                        sun: ["event 1", "event 2"],
-                    },
-                    clubProposals: [
-                        {
-                            category: "category 1",
-                            clubName: "club 3",
-                            clubDescription: "This is a description of the third club. This club meets on fridays after school",
-                            contacts: ["4carter.ross@benet.org"],
-                            logo: "gs://benet-clubs.appspot.com/test-1.jpg",
-                        },
-                        {
-                            category: "category 2",
-                            clubName: "club 4",
-                            clubDescription: "This is a description of the fourth club. This club meets on fridays after school",
-                            contacts: ["4carter.ross@benet.org"],
-                            logo: "gs://benet-clubs.appspot.com/test-2.jpg",
-                        },
-                    ]
-                },
-                students: {
-                    clubs: [
-                        {
-                            category: "category 1",
-                            clubName: "club 1",
-                            clubDescription: "This is a description of the first club. This club meets on wednesdays after school",
-                            contacts: ["4carter.ross@benet.org"],
-                            logo: "gs://benet-clubs.appspot.com/test-2.jpg",
-                        },
-                        {
-                            category: "category 2",
-                            clubName: "club 2",
-                            clubDescription: "This is a description of the second club. This club meets on mondays after school",
-                            contacts: ["4carter.ross@benet.org"],
-                            logo: "gs://benet-clubs.appspot.com/test-1.jpg",
-                        },
-                    ],
-                }
-            }
-        };
-
-        await set(databaseRef, templateData);
-        console.log("Firebase database filled with template structure successfully.");
-    } catch (error) {
-        console.error("Error filling Firebase database:", error);
-    }
-}
-
 // Function to upload image file to Firebase Storage
 async function uploadImageFile(imageFile) {
     try {
@@ -176,8 +102,9 @@ async function uploadImageFile(imageFile) {
 }
 
 // loading content to the database when the website is loaded
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", async function() {
     populateEvents();
+    await loadClubsByCategory("all categories");
 });
 
 async function populateEvents() {
@@ -224,14 +151,11 @@ async function populateEvents() {
                 eventElement.classList.add("event-container"); // Add event container class
 
                 // Add event details to the event element
-                const eventName = document.createElement("p");
-                eventName.textContent = event.name;
-                eventName.classList.add("event-title"); // Add event title class
-                eventElement.appendChild(eventName);
-                const eventDate = document.createElement("p");
-                eventDate.textContent = new Date(event.date).toLocaleString(); // Format the date however you want
-                eventDate.classList.add("event-time"); // Add event time class
-                eventElement.appendChild(eventDate);
+                const eventDetails = document.createElement("p");
+                const eventDateTime = new Date(event.date).toLocaleString(); // Format the date however you want
+                eventDetails.textContent = `${event.name} - ${eventDateTime}`; // Concatenate event name and date with space
+                eventDetails.classList.add("event-details"); // Add event details class
+                eventElement.appendChild(eventDetails);
 
                 // Append the event element to the events container
                 eventsContainer.appendChild(eventElement);
@@ -247,6 +171,10 @@ async function populateEvents() {
 // Function to load clubs with a certain category
 async function loadClubsByCategory(category) {
     try {
+        // Reset the indexes object
+        indexes = {};
+        indexCount = 0;
+
         const snapshot = await get(databaseRef); // Retrieve data from Firebase database
         const data = snapshot.val(); // Extract the JSON object from the snapshot
         const clubs = data.db.students.clubs; // Get the clubs data
@@ -260,9 +188,7 @@ async function loadClubsByCategory(category) {
         clubs.forEach(club => {
             indexes[club.clubName] = indexCount;
             indexCount++;
-            console.log(club)
-            console.log(indexes);
-            if (club.category == category || category == "all") {
+            if (club.category == category || category == "all categories") {
                 const clubContainer = document.createElement("div");
                 clubContainer.classList.add("club-container");
                 clubContainer.classList.add("pointer");
@@ -378,7 +304,7 @@ expandedClubViewBackButton.addEventListener("click", () => {
     document.getElementById("expandedClubView").style.display = "none";
 });
 
-loadClubsByCategory("all")
+loadClubsByCategory("all categories")
 
 // Function to reorder clubs alphabetically in the database
 async function reorderClubsAlphabetically() {
@@ -402,4 +328,15 @@ async function reorderClubsAlphabetically() {
 // called whenever somen visits website to make sure club are re ordered
 //reorderClubsAlphabetically()
 
-//fillDatabase()sss
+//fillDatabase()
+
+// Event listener for the club category dropdown menu
+const clubCategoryInput = document.getElementById("clubCategoryInput");
+clubCategoryInput.addEventListener("change", async (event) => {
+    const selectedCategory = event.target.value;
+    await loadClubsByCategory(selectedCategory);
+}); /*
+    <select id="clubCategoryInput">
+        <option value="all categories">All Clubs</option>
+    </select>
+*/
