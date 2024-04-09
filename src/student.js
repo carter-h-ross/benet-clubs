@@ -171,9 +171,12 @@ const requestClubWindowButton = document.getElementById("requestClubButton");
 const requestBackButton = document.getElementById("requestBackButton");
 const requestDiv = document.getElementById("tableTitleDiv");
 
-requestClubWindowButton.addEventListener("click", function() {
+requestClubWindowButton.addEventListener("click", async () => {
     requestClubWindow.style.display = "block";
     document.body.classList.add("expanded-club-view");
+
+    // Populate the category dropdown menu
+    await populateClubCategoriesNewClub();
 })
 requestBackButton.addEventListener("click",function() {
     requestClubWindow.style.display = "none"
@@ -205,6 +208,31 @@ async function populateClubCategories() {
                 clubCategoryInput.appendChild(option);
             });
             clubCategoryInput.value = "all categories"
+        }
+
+    } catch (error) {
+        console.error("Error populating club categories:", error);
+    }
+}
+
+const clubCategoryInputNewClub = document.getElementById("clubCategoryInputNewClub");
+// Function to populate club category options dropdown
+async function populateClubCategoriesNewClub() {
+    try {
+        const snapshot = await get(ref(database, 'db/general/clubCategories'));
+        const clubCategories = snapshot.val();
+        if (clubCategories) {
+            // Clear previous options
+            clubCategoryInputNewClub.innerHTML = ""; // <-- Fix
+            // Add each club category as an option
+            Object.values(clubCategories).forEach(category => {
+                const option = document.createElement("option");
+                option.classList.add("select-arrow")
+                option.value = category;
+                option.textContent = category;
+                clubCategoryInputNewClub.appendChild(option); // <-- Fix
+            });
+            clubCategoryInputNewClub.value = "all categories"
         }
 
     } catch (error) {
@@ -561,4 +589,27 @@ const clubCategoryInput = document.getElementById("clubCategoryInput");
 clubCategoryInput.addEventListener("change", async (event) => {
     const selectedCategory = event.target.value;
     await loadClubsByCategory(selectedCategory);
+});
+
+// Function to handle submitting the new club request
+const submitNewClubButton = document.getElementById("submitNewClubButton");
+submitNewClubButton.addEventListener("click", async () => {
+    // Retrieve input values
+    const clubNameInput = document.getElementById("clubNameInput").value;
+    const clubDescriptionInput = document.getElementById("clubDescriptionInput").value; // Retrieve club description from textarea
+
+    // Validate input values
+    if (!clubNameInput.trim() || !clubDescriptionInput.trim()) {
+        alert("Please enter a valid club name and description.");
+        return;
+    }
+
+    // Push the new club object to the database
+    try {
+        // Your code for pushing the new club to the database
+        console.log("New club request submitted successfully.");
+    } catch (error) {
+        console.error("Error submitting new club request:", error);
+        alert("An error occurred while submitting the new club request. Please try again.");
+    }
 });

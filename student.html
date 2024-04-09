@@ -15,24 +15,23 @@
 
     <select id="clubCategoryInput" class="select-arrow">
         <option value="all">All Clubs</option>
-        <div class="select-arrow">
-        </div>
+        <!-- Options will be dynamically populated here -->
     </select>
     
     <div id="clubsContainer">
-        
+        <!-- Club cards will be dynamically populated here -->
     </div>
 
     <div class="parent">
         <div id="tableTitleDiv">
-            <button id="requestClubButton" class="pointer"> request new club </button>
-            <h3 id="weekTitle">Benet club events</h3>
-            <button id="requestNewEventButton" class="pointer"> add new event </button>
+            <button id="requestClubButton" class="pointer">Request New Club</button>
+            <h3 id="weekTitle">Benet Club Events</h3>
+            <button id="requestNewEventButton" class="pointer">Add New Event</button>
         </div>
     </div>
 
     <div id="eventsContainer">
-        
+        <!-- Event cards will be dynamically populated here -->
     </div>
 
     <!-- Expanded Club View -->
@@ -40,7 +39,7 @@
         <div id="expandedClubDetails">
             <h2 id="expandedClubName"></h2>
             <p id="expandedClubDescription"></p>
-            <p id="expandedClubContacts"></p>
+            <ul id="expandedClubContacts"></ul>
         </div>
         <div id="expandedClubButtons">
             <button id="backButton" class="pointer">Back</button>
@@ -56,7 +55,8 @@
             <label for="editClubName">Club Name:</label>
             <input type="text" id="editClubName" class="main-menu-input" required>
             <label for="editClubDescription">Club Description:</label>
-            <textarea id="editClubDescription" class="main-menu-input" rows="4" required></textarea> <br>
+            <textarea id="editClubDescription" class="main-menu-input" rows="4" required></textarea>
+            <br>
             <input type="text" id="editClubContactInput" class="main-menu-input" placeholder="Add new contact">
             <button id="addContactButton" class="expandedClubButtons pointer">Add Contact</button>
             <ul id="editClubContactsList"></ul>
@@ -65,27 +65,26 @@
         </div>
     </div>
 
+    <!-- Request New Club Window -->
     <div id="requestClubWindow" class="main-menu smallText">
-        <h1>club category:</h1>
+        <h1>Club Category:</h1>
         <div class="select">
-            <select id="clubCategoryInput">
-                <option>options will be placed here</option>
-                <div class="select_arrow">
-                </div>
+            <select id="clubCategoryInputNewClub">
+                <!-- Options will be dynamically populated here -->
             </select>
         </div>
-        <h1>club name:</h1>
+        <h1>Club Name:</h1>
         <input id="clubNameInput" class="main-menu-input" type="text">
-        <h1>club description:</h1>
-        <input id="clubDescriptionInput" class="main-menu-input" type="text">
-        <h1>club contacts:</h1>
+        <h1>Club Description:</h1>
+        <textarea id="clubDescriptionInput" class="main-menu-input" rows="4" required></textarea>
+        <h1>Club Contacts:</h1>
         <input type="text" id="clubContactsInput" class="main-menu-input" placeholder="Enter contact email">
-        <button id="addContactButton" class="pointer">Add Contact</button>
+        <button id="addContactButtonRequest" class="pointer">Add Contact</button>
         <div id="contactList"></div>
-        <h1>upload club logo:</h1>
+        <h1>Upload Club Logo:</h1>
         <input id="clubLogoInput" type="file">
-        <button id="submitClubButton" class="pointer margin-top" type="submit">request club</button>
-        <button id="requestBackButton" class="pointer margin-top">cancel</button>
+        <button id="submitNewClubButton" class="pointer margin-top" type="submit">Request Club</button>
+        <button id="requestBackButton" class="pointer margin-top">Cancel</button>
     </div>
 
     <!-- Request New Event Window -->
@@ -95,7 +94,7 @@
         <input id="eventNameInput" class="main-menu-input" type="text">
         <h1>Date and Time:</h1>
         <input id="dateTimeInput" class="main-menu-input" type="datetime-local">
-        <button id="submitNewEventButton" class="pointer margin-top" type="submit">submit event</button>
+        <button id="submitNewEventButton" class="pointer margin-top" type="submit">Submit Event</button>
         <button id="cancelNewEventButton" class="pointer margin-top">Cancel</button>
     </div>
 
