@@ -6,7 +6,7 @@ console.log("student.js file");
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth"; // Import signInWithPopup
-import { getDatabase, ref, set, get } from "firebase/database";
+import { getDatabase, ref, set, get, push } from "firebase/database";
 import { getStorage, ref as storageRef, uploadBytes } from "firebase/storage";
 import { getAuth } from "firebase/auth";
 
@@ -54,8 +54,6 @@ async function loadClubsByCategory(category) {
         clubs.forEach(club => {
             indexes[club.clubName] = indexCount;
             indexCount++;
-            console.log(club)
-            console.log(indexes);
             if (club.category == category || category == "all") {
                 const clubContainer = document.createElement("div");
                 clubContainer.classList.add("club-container");
@@ -102,42 +100,176 @@ async function loadClubsByCategory(category) {
     }
 }
 
+const requestNewEventWindow = document.getElementById("requestNewEventWindow");
+const requestNewEventWindowBackButton = document.getElementById("cancelNewEventButton");
+const requestNewEventButton = document.getElementById("requestNewEventButton");
+
+// Event listener for opening the request new event window
+requestNewEventButton.addEventListener("click", function() {
+    requestNewEventWindow.style.display = "block";
+    document.body.classList.add("expanded-club-view");
+});
+
+// Event listener for closing the request new event window
+requestNewEventWindowBackButton.addEventListener("click", function() {
+    requestNewEventWindow.style.display = "none";
+    document.body.classList.remove("expanded-club-view");
+});
+
+// Function to handle submitting the new event request
+const submitNewEventButton = document.getElementById("submitNewEventButton");
+submitNewEventButton.addEventListener("click", async () => {
+    // Retrieve input values
+    const eventNameInput = document.getElementById("eventNameInput").value;
+    const dateTimeInput = document.getElementById("dateTimeInput").value;
+
+    // Validate input values
+    if (!eventNameInput.trim()) {
+        alert("Please enter a valid event name.");
+        return;
+    }
+
+    // Create a new Date object from the dateTimeInput value
+    const date = new Date(dateTimeInput);
+    const formattedDate = date.toLocaleString(); // Convert date to a readable format
+
+    // Push the new event object to the database
+    try {
+        const currentTimeStamp = Date.now();
+        const dateRef = ref(database, `db/general/events/${currentTimeStamp}/date`);
+        set(dateRef, formattedDate); // Use formattedDate instead of date
+        const nameRef = ref(database, `db/general/events/${currentTimeStamp}/name`);
+        set(nameRef, eventNameInput); // Wait for name to be set before proceeding
+        console.log("New event request submitted successfully.");
+        // Close the request new event window
+        requestNewEventWindow.style.display = "none";
+        document.body.classList.remove("expanded-club-view");
+    } catch (error) {
+        console.error("Error submitting new event request:", error);
+        alert("An error occurred while submitting the new event request. Please try again.");
+    }
+});
+
+// Function to handle canceling the new event request
+const cancelNewEventButton = document.getElementById("cancelNewEventButton");
+cancelNewEventButton.addEventListener("click", () => {
+    // Clear input fields
+    document.getElementById("eventNameInput").value = "";
+    document.getElementById("dayOfWeekInput").value = "";
+
+    // Close the request new event window
+    requestNewEventWindow.style.display = "none";
+    document.body.classList.remove("expanded-club-view");
+});
+
 const requestClubWindow = document.getElementById("requestClubWindow");
 const requestClubWindowButton = document.getElementById("requestClubButton");
 const requestBackButton = document.getElementById("requestBackButton");
+const requestDiv = document.getElementById("tableTitleDiv");
+
 requestClubWindowButton.addEventListener("click", function() {
     requestClubWindow.style.display = "block";
+    document.body.classList.add("expanded-club-view");
 })
 requestBackButton.addEventListener("click",function() {
     requestClubWindow.style.display = "none"
+    document.body.classList.remove("expanded-club-view");
 })
 
 // loading content to the database when the website is loaded
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", async () => {
     populateEvents();
     requestClubWindow.style.display = "none";
+    requestNewEventWindow.style.display = "none";
+    await populateClubCategories();
 });
+
+// Function to populate club category options dropdown
+async function populateClubCategories() {
+    try {
+        const snapshot = await get(ref(database, 'db/general/clubCategories'));
+        const clubCategories = snapshot.val();
+        if (clubCategories) {
+            // Clear previous options
+            clubCategoryInput.innerHTML = "";
+            // Add each club category as an option
+            Object.values(clubCategories).forEach(category => {
+                const option = document.createElement("option");
+                option.value = category;
+                option.textContent = category;
+                clubCategoryInput.appendChild(option);
+            });
+        }
+    } catch (error) {
+        console.error("Error populating club categories:", error);
+    }
+}
+
+function convertDateToTimestamp(dateString) {
+    // Parse the date string
+    const date = new Date(dateString);
+
+    // Get the timestamp
+    const timestamp = date.getTime();
+
+    return timestamp;
+}
 
 async function populateEvents() {
     try {
-        const snapshot = await get(databaseRef); // Retrieve data from Firebase database
-        const data = snapshot.val(); // Extract the JSON object from the snapshot
-        const weeklySchedule = data.db.general.weeklySchedule; // Get the weekly schedule data
-        
-        // Loop through each day of the week and populate events
-        Object.keys(weeklySchedule).forEach(day => {
-            const events = weeklySchedule[day];
-            const dayElement = document.getElementById(day);
-            if (dayElement) {
-                dayElement.innerHTML = ""; // Clear previous events
-                events.forEach((event, index) => {
-                    const eventElement = document.createElement("div");
-                    eventElement.textContent = event;
-                    if (index < events.length - 1) {
-                        eventElement.innerHTML += "<hr>"; // Add line break if not the last event
-                    }
-                    dayElement.appendChild(eventElement);
-                });
+        const snapshot = await get(ref(database, 'db/general/events')); // Retrieve events from Firebase database
+        const events = snapshot.val(); // Extract the JSON object from the snapshot
+        console.log(events);
+
+        if (!events) {
+            console.log("No events found.");
+            return; // Exit the function if no events are found
+        }
+
+        const eventsContainer = document.getElementById("eventsContainer");
+        eventsContainer.innerHTML = ""; // Clear previous content
+
+        // Get the current timestamp
+        const currentTimestamp = Date.now();
+
+        // Convert events object to an array of event objects
+        const eventsArray = Object.keys(events).map(eventKey => {
+            const event = events[eventKey];
+            return {
+                key: eventKey,
+                name: event.name,
+                date: convertDateToTimestamp(event.date)
+            };
+        });
+        console.log(eventsArray);
+
+        // Sort events by date, with the closest event first
+        eventsArray.sort((a, b) => a.date - b.date);
+        console.log("events array after sorting: ")
+        console.log(eventsArray);
+
+        // Loop through each event
+        eventsArray.forEach(event => {
+            // Check if the event date is in the future
+            console.log(event.date);
+            console.log(currentTimestamp)
+            if (event.date > currentTimestamp) {
+                // Create a div element for the event
+                const eventElement = document.createElement("div");
+                eventElement.classList.add("event-container"); // Add event container class
+
+                // Add event details to the event element
+                const eventName = document.createElement("p");
+                eventName.textContent = event.name;
+                eventName.classList.add("event-title"); // Add event title class
+                eventElement.appendChild(eventName);
+                const eventDate = document.createElement("p");
+                eventDate.textContent = new Date(event.date).toLocaleString(); // Format the date however you want
+                eventDate.classList.add("event-time"); // Add event time class
+                eventElement.appendChild(eventDate);
+
+                // Append the event element to the events container
+                eventsContainer.appendChild(eventElement);
             }
         });
 

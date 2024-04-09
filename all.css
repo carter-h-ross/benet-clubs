@@ -151,24 +151,28 @@ body {
   }
   
   /* CSS for expanded club view */
-  #expandedClubView, #editClubWindow{
-  position: fixed;
-  top:10%;
-  left:10%;
-  width: 80%;
-  height: 80%;
-  z-index: 9999; /* Ensure it's above other elements */
-  display: flex;
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
+  #expandedClubView, #editClubWindow, #requestNewEventWindow{
+    position: fixed;
+    top:10%;
+    left:10%;
+    width: 80%;
+    height: 80%;
+    z-index: 9999; /* Ensure it's above other elements */
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
   }
 
-  #requestClubWindow {
+  #requestClubWindow, #requestNewEventWindow {
     width: 30%;
     left: 35%;
   }
 
-  #requestClubWindow .select {
+  #requestNewEventWindow {
+    height: 50%;
+  }
+
+  #requestClubWindow .select{
     width: 60%
   }
 
@@ -198,6 +202,10 @@ body {
   height: 75%; /* Take up 80% of the screen vertically */
   overflow-y: auto; /* Add vertical scroll if content exceeds */
   }
+
+  option {
+    text-align: center;
+  }
   
   #expandedClubButtons, .expandedClubButtons {
   margin-top: 20px;
@@ -210,6 +218,7 @@ body {
   
   /* Hide the main content when the club view is expanded */
   body.expanded-club-view #clubsContainer,
+  body.expanded-club-view #tableTitleDiv,
   body.expanded-club-view #eventsContainer {
   display: none;
   }
@@ -424,4 +433,64 @@ button:hover {
 }
 .select select:disabled ~ .select_arrow {
     border-top-color: #ffffff;
+}
+
+/* Event Container Styles */
+.event-container {
+  /* Styles similar to club container */
+  position: relative; /* Establish positioning context */
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 5px 5px 5px rgb(178, 176, 176);
+  display: flex;
+  width: 80%;
+  left: 10%;
+  align-items: center;
+  margin-bottom: 2vh;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+
+.event-container:hover {
+    transform: scale(1.03);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+/* Styles for event details */
+.event-details {
+    flex: 1;
+}
+
+/* Styles for event title */
+.event-title {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+/* Styles for event time */
+.event-time {
+    font-size: 1rem;
+    color: #888;
+    margin-right: 20px;
+}
+
+/* Styles for event location */
+.event-location {
+    font-size: 1rem;
+    color: #555;
+    margin-top: 0.5rem;
+}
+
+/* Hide the main content when the event view is expanded */
+body.expanded-event-view #clubsContainer,
+body.expanded-event-view #tableTitleDiv,
+body.expanded-event-view #eventsContainer {
+    display: none;
 }

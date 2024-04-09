@@ -17,42 +17,16 @@
         
     </div>
 
-    <div id="eventsContainer">
-        <div class="parent">
-            <div id="tableTitleDiv">
-                <button id="requestClubButton" class="pointer"> request new club </button>
-                <h3 id="weekTitle">Benet club events this week</h3>
-                <button id="requestEventButton" class="pointer"> request new event </button>
-            </div>
-            <div>
-                <label for="mon">Monday:</label>
-                <div id="mon"> no events for monday</div>
-            </div>
-            <div>
-                <label for="tue">Tuesday:</label>
-                <div id="tue"> no events for tuesday</div>
-            </div>
-            <div>
-                <label for="wed">Wednesday:</label>
-                <div id="wed"> no events for wednesday</div>
-            </div>
-            <div>
-                <label for="thu">Thursday:</label>
-                <div id="thu"> no events for thursday</div>
-            </div>
-            <div>
-                <label for="fri">Friday:</label>
-                <div id="fri"> no events for friday</div>
-            </div>
-            <div>
-                <label for="sat">Saturday:</label>
-                <div id="sat"> no events for saturday</div>
-            </div>
-            <div>
-                <label for="sun">Sunday:</label>
-                <div id="sun"> no events for sunday</div>
-            </div>
+    <div class="parent">
+        <div id="tableTitleDiv">
+            <button id="requestClubButton" class="pointer"> request new club </button>
+            <h3 id="weekTitle">Benet club events</h3>
+            <button id="requestNewEventButton" class="pointer"> add new event </button>
         </div>
+    </div>
+
+    <div id="eventsContainer">
+        
     </div>
 
     <!-- Expanded Club View -->
@@ -106,6 +80,17 @@
         <input id="clubLogoInput" type="file">
         <button id="submitClubButton" class="pointer margin-top" type="submit">request club</button>
         <button id="requestBackButton" class="pointer margin-top">cancel</button>
+    </div>
+
+    <!-- Request New Event Window -->
+    <div id="requestNewEventWindow" class="main-menu smallText">
+        <h1>Add New Event:</h1>
+        <h1>Event Name:</h1>
+        <input id="eventNameInput" class="main-menu-input" type="text">
+        <h1>Date and Time:</h1>
+        <input id="dateTimeInput" class="main-menu-input" type="datetime-local">
+        <button id="submitNewEventButton" class="pointer margin-top" type="submit">submit event</button>
+        <button id="cancelNewEventButton" class="pointer margin-top">Cancel</button>
     </div>
 
     <script src="student-build.js"></script>

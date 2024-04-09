@@ -31,6 +31,17 @@ const databaseRef = ref(database);
 let indexes = {
 
 }
+
+function convertDateToTimestamp(dateString) {
+    // Parse the date string
+    const date = new Date(dateString);
+
+    // Get the timestamp
+    const timestamp = date.getTime();
+
+    return timestamp;
+}
+
 let indexCount = 0;
 
 const loginButton = document.getElementById("signInButton");
@@ -169,6 +180,70 @@ document.addEventListener("DOMContentLoaded", function() {
     populateEvents();
 });
 
+async function populateEvents() {
+    try {
+        const snapshot = await get(ref(database, 'db/general/events')); // Retrieve events from Firebase database
+        const events = snapshot.val(); // Extract the JSON object from the snapshot
+        console.log(events);
+
+        if (!events) {
+            console.log("No events found.");
+            return; // Exit the function if no events are found
+        }
+
+        const eventsContainer = document.getElementById("eventsContainer");
+        eventsContainer.innerHTML = ""; // Clear previous content
+
+        // Get the current timestamp
+        const currentTimestamp = Date.now();
+
+        // Convert events object to an array of event objects
+        const eventsArray = Object.keys(events).map(eventKey => {
+            const event = events[eventKey];
+            return {
+                key: eventKey,
+                name: event.name,
+                date: convertDateToTimestamp(event.date)
+            };
+        });
+        console.log(eventsArray);
+
+        // Sort events by date, with the closest event first
+        eventsArray.sort((a, b) => a.date - b.date);
+        console.log("events array after sorting: ")
+        console.log(eventsArray);
+
+        // Loop through each event
+        eventsArray.forEach(event => {
+            // Check if the event date is in the future
+            console.log(event.date);
+            console.log(currentTimestamp)
+            if (event.date > currentTimestamp) {
+                // Create a div element for the event
+                const eventElement = document.createElement("div");
+                eventElement.classList.add("event-container"); // Add event container class
+
+                // Add event details to the event element
+                const eventName = document.createElement("p");
+                eventName.textContent = event.name;
+                eventName.classList.add("event-title"); // Add event title class
+                eventElement.appendChild(eventName);
+                const eventDate = document.createElement("p");
+                eventDate.textContent = new Date(event.date).toLocaleString(); // Format the date however you want
+                eventDate.classList.add("event-time"); // Add event time class
+                eventElement.appendChild(eventDate);
+
+                // Append the event element to the events container
+                eventsContainer.appendChild(eventElement);
+            }
+        });
+
+        console.log("Events populated successfully.");
+    } catch (error) {
+        console.error("Error populating events:", error);
+    }
+}
+
 // Function to load clubs with a certain category
 async function loadClubsByCategory(category) {
     try {
@@ -302,35 +377,6 @@ expandedClubViewBackButton.addEventListener("click", () => {
     document.body.classList.remove("expanded-club-view");
     document.getElementById("expandedClubView").style.display = "none";
 });
-
-async function populateEvents() {
-    try {
-        const snapshot = await get(databaseRef); // Retrieve data from Firebase database
-        const data = snapshot.val(); // Extract the JSON object from the snapshot
-        const weeklySchedule = data.db.general.weeklySchedule; // Get the weekly schedule data
-        
-        // Loop through each day of the week and populate events
-        Object.keys(weeklySchedule).forEach(day => {
-            const events = weeklySchedule[day];
-            const dayElement = document.getElementById(day);
-            if (dayElement) {
-                dayElement.innerHTML = ""; // Clear previous events
-                events.forEach((event, index) => {
-                    const eventElement = document.createElement("div");
-                    eventElement.textContent = event;
-                    if (index < events.length - 1) {
-                        eventElement.innerHTML += "<hr>"; // Add line break if not the last event
-                    }
-                    dayElement.appendChild(eventElement);
-                });
-            }
-        });
-
-        console.log("Events populated successfully.");
-    } catch (error) {
-        console.error("Error populating events:", error);
-    }
-}
 
 loadClubsByCategory("all")
 
