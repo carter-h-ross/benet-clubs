@@ -38,87 +38,14 @@ goToStudentPageButton.addEventListener("click", (e) => {
 
 // Get references to HTML elements
 const clubCategoryInput = document.getElementById("clubCategoryInput");
-const clubNameInput = document.getElementById("clubNameInput");
-const clubDescriptionInput = document.getElementById("clubDescriptionInput");
-const clubLogoInput = document.getElementById("clubLogoInput");
-const submitClubButton = document.getElementById("submitClubButton");
 const newCategoryInput = document.getElementById("newCategoryInput");
 const addNewCategoryButton = document.getElementById("addNewCategoryButton");
 const trustedEmailInput = document.getElementById("trustedEmailInput");
 const addNewTrustedEmailButton = document.getElementById("addNewTrustedEmailButton");
 
-// Function to populate club category options dropdown
-async function populateClubCategories() {
-    try {
-        const snapshot = await get(ref(database, 'db/general/clubCategories'));
-        const clubCategories = snapshot.val();
-        if (clubCategories) {
-            // Clear previous options
-            clubCategoryInput.innerHTML = "";
-            // Add each club category as an option
-            Object.values(clubCategories).forEach(category => {
-                const option = document.createElement("option");
-                option.value = category;
-                option.textContent = category;
-                clubCategoryInput.appendChild(option);
-            });
-        }
-    } catch (error) {
-        console.error("Error populating club categories:", error);
-    }
-}
-
 // Call the function to populate club categories when the page loads
 document.addEventListener("DOMContentLoaded", async () => {
-    await populateClubCategories();
-});
-
-// Function to handle club submission
-submitClubButton.addEventListener("click", async () => {
-    const category = clubCategoryInput.value;
-    const clubName = clubNameInput.value;
-    const clubDescription = clubDescriptionInput.value;
-    const clubLogoFile = clubLogoInput.files[0];
-    const contacts = Array.from(document.querySelectorAll('#contactList div')).map(item => item.textContent.trim()); // Get the list of contacts
-
-    console.log(contacts);
-
-    // Upload club logo to Firebase Storage
-    const logoDownloadURL = await uploadImageFile(clubLogoFile);
-
-    // Create club object
-    const newClub = {
-        category,
-        clubName,
-        clubDescription,
-        contacts,
-        logo: logoDownloadURL || "", // Use the download URL if available, otherwise an empty string
-    };
-
-    try {
-        // Get the current list of clubs from the database
-        const clubsSnapshot = await get(ref(database, 'db/students/clubs'));
-        let clubsList = clubsSnapshot.val() || []; // If no clubs exist, start with an empty array
-
-        // Append the new club to the existing list
-        clubsList.push(newClub);
-
-        // Sort the clubs alphabetically by club name
-        clubsList.sort((a, b) => a.clubName.localeCompare(b.clubName));
-
-        // Update the list of clubs in the database
-        await set(ref(database, 'db/students/clubs'), clubsList);
-
-        console.log("Club submitted successfully.");
-        // Clear input fields after submission
-        clubCategoryInput.value = "";
-        clubNameInput.value = "";
-        clubDescriptionInput.value = "";
-        clubLogoInput.value = "";
-        document.getElementById('contactList').innerHTML = ''; // Clear contact list
-    } catch (error) {
-        console.error("Error submitting club:", error);
-    }
+    loadClubsByCategory("all categories")
 });
 
 // Function to reorder clubs alphabetically in the database
@@ -158,16 +85,6 @@ async function uploadImageFile(imageFile) {
     }
 }
 
-const addNewContactButton = document.getElementById('addContactButton');
-addNewContactButton.addEventListener('click', function() {
-    var contactInput = document.getElementById('clubContactsInput').value;
-    var contactList = document.getElementById('contactList');
-    var contactItem = document.createElement('div');
-    contactItem.textContent = contactInput;
-    contactList.appendChild(contactItem);
-    document.getElementById('clubContactsInput').value = ''; // Clear input after adding contact
-});
-
 // Function to handle adding new category
 addNewCategoryButton.addEventListener("click", async () => {
     const newCategory = newCategoryInput.value;
@@ -202,3 +119,129 @@ addNewTrustedEmailButton.addEventListener("click", async () => {
 
 // called whenever somen visits website to make sure club are re ordered
 //reorderClubsAlphabetically()
+
+// Function to load clubs with a certain category
+async function loadClubsByCategory(category) {
+    try {
+        const snapshot = await get(ref(database, 'db/admins/newClubs')); // Retrieve data from Firebase database
+        const clubs = snapshot.val(); // Extract the JSON object from the snapshot
+
+        const clubsContainerAdmin = document.getElementById("clubsContainerAdmin");
+        clubsContainerAdmin.innerHTML = ""; // Clear previous content
+
+        // Iterate through the clubs object using for...in loop
+        for (const clubKey in clubs) {
+            const club = clubs[clubKey]; // Get the club object using the club key
+
+            if (club.category === category || category === "all categories") {
+                const clubContainer = document.createElement("div");
+                clubContainer.classList.add("club-container");
+                clubContainer.classList.add("pointer");
+
+                // Create and append club logo if available
+                if (club.logo) {
+                    const clubLogo = document.createElement("img");
+                    clubLogo.classList.add("club-logo");
+                    clubLogo.src = club.logo;
+                    clubContainer.appendChild(clubLogo);
+                }
+
+                // Create and append club details
+                const clubDetails = document.createElement("div");
+                clubDetails.innerHTML = `<h2>${club.clubName}</h2>
+                                         <p class="hidden">${club.clubDescription}</p>
+                                         <h3>Contact:</h3>`;
+
+                // Create a list element for contacts
+                const contactsList = document.createElement("p");
+
+                // Iterate over each contact and create list items
+                club.contacts.forEach(contact => {
+                    const contactItem = document.createElement("p");
+                    contactItem.classList.add('contacts-list');
+                    contactItem.textContent = contact;
+                    contactsList.appendChild(contactItem);
+                });
+
+                // Append the contacts list to clubDetails
+                clubDetails.appendChild(contactsList);
+
+                clubContainer.appendChild(clubDetails);
+
+                clubsContainerAdmin.appendChild(clubContainer);
+            }
+        }
+
+        console.log("Clubs loaded successfully.");
+        setupClubContainerListeners();
+    } catch (error) {
+        console.error("Error loading clubs:", error);
+    }
+}
+
+function setupClubContainerListeners() {
+    const clubContainers = document.querySelectorAll(".club-container");
+    clubContainers.forEach(clubContainer => {
+        clubContainer.addEventListener("click", function() {
+            expandClubView(this);
+        });
+    });
+}
+
+function expandClubView(clubContainer) {
+    // Remove any existing club logo from the expanded club view
+    const existingClubLogo = document.querySelector(".club-logo-expanded");
+    if (existingClubLogo) {
+        existingClubLogo.remove();
+    }
+
+    // Add a class to the body to indicate that the club view is expanded
+    document.body.classList.add("expanded-club-view");
+
+    // Get the club name from the clicked container
+    const clubName = clubContainer.querySelector("h2").textContent;
+
+    // Retrieve the club details from the database based on the club name
+    const clubRef = ref(database, 'db/admins/newClubs');
+    get(child(clubRef, clubName))
+        .then((snapshot) => {
+            const clubData = snapshot.val();
+            if (clubData) {
+                // Update the club name and description in the expanded view
+                document.getElementById("expandedClubName").textContent = clubData.clubName;
+                document.getElementById("expandedClubDescription").textContent = clubData.clubDescription;
+
+                // Clear existing contacts
+                const contactsList = document.getElementById("expandedClubContacts");
+                contactsList.innerHTML = "";
+
+                // Populate contacts as a list
+                clubData.contacts.forEach(contact => {
+                    const contactItem = document.createElement("li");
+                    contactItem.textContent = contact;
+                    contactsList.appendChild(contactItem);
+                });
+
+                // Create and append club logo to the expanded club view
+                const clubLogo = document.createElement("img");
+                clubLogo.classList.add("club-logo-expanded");
+                clubLogo.src = clubData.logo;
+                document.getElementById("expandedClubDetails").prepend(clubLogo);
+
+                // Display the expanded club view
+                document.getElementById("expandedClubView").style.display = "block";
+            } else {
+                console.error("Club data not found for club:", clubName);
+            }
+        })
+        .catch((error) => {
+            console.error("Error retrieving club information:", error);
+        });
+}
+
+const expandedClubViewBackButton = document.getElementById("backButton")
+expandedClubViewBackButton.addEventListener("click", () => {
+    // Remove the class from the body when the club view is closed
+    document.body.classList.remove("expanded-club-view");
+    document.getElementById("expandedClubView").style.display = "none";
+});

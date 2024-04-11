@@ -17,6 +17,16 @@ body {
   max-width: 90vw; /* Set maximum width to 90% of viewport width */
   margin: 0 auto; /* Center the container horizontally */
   }
+
+  #clubsContainerAdmin {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); /* Adjusted to auto-fit with a minimum width of 300px */
+    gap: 20px; /* Adjust gap between club divs */
+    padding: 20px; /* Add padding */
+    max-width: 60vw; /* Set maximum width to 60% of viewport width */
+    margin-left: 5%; /* Adjusted to start from 5% from the left */
+    margin-right: 5%; /* Adjusted to end 5% from the right */
+}
   
   /* Styles for club container */
   .club-container {
@@ -218,6 +228,8 @@ body {
   
   /* Hide the main content when the club view is expanded */
   body.expanded-club-view #clubsContainer,
+  body.expanded-club-view #clubsContainerAdmin,
+  body.expanded-club-view #adminMenu,
   body.expanded-club-view #tableTitleDiv,
   body.expanded-club-view #eventsContainer,
   body.expanded-club-view #clubCategoryInput {
@@ -491,6 +503,8 @@ button:hover {
 
 /* Hide the main content when the event view is expanded */
 body.expanded-event-view #clubsContainer,
+body.expanded-event-view #clubsContainerAdmin,
+body.expanded-club-view #adminMenu,
 body.expanded-event-view #tableTitleDiv,
 body.expanded-event-view #eventsContainer,
 body.expanded-event-view #clubCategoryInput {
@@ -590,3 +604,20 @@ body.expanded-event-view #clubCategoryInput {
   color: #333;
 }
 
+.admin-menu {
+  position: fixed;
+  top: 10%;
+  left: 3%;
+  width: 64%; /* 70% of the screen width */
+  height: 80%;
+  background: rgba(255, 255, 255, 0.57);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(12.1px);
+  -webkit-backdrop-filter: blur(12.1px);
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  justify-content: center;
+  align-items: center;
+}

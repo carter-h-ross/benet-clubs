@@ -380,7 +380,6 @@ function displayUserInfo() {
 // Call displayUserInfo function to initialize user info display and logout functionality
 displayUserInfo();
 
-
 function expandClubView(clubContainer) {
     // Remove any existing club logo from the expanded club view
     const existingClubLogo = document.querySelector(".club-logo-expanded");

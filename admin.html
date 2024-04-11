@@ -5,41 +5,38 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="all.css">
-    <title>add club</title>
+    <title>Admin Page</title>
 </head>
 <body>
 
-    <button id="goToStudentPage" class="pointer">go to student page</button>
+    <button id="goToStudentPage" class="pointer">Go to Student Page</button>
 
-    <div id="main-menu" class="main-menu">
-        <h1>club category:</h1>
-        <div class="select">
-            <select id="clubCategoryInput">
-                <option>options will be placed here</option>
-                <div class="select_arrow">
-                </div>
-            </select>
-        </div>
-        <h1>club name:</h1>
-        <input id="clubNameInput" class="main-menu-input" type="text">
-        <h1>club description:</h1>
-        <input id="clubDescriptionInput" class="main-menu-input" type="text">
-        <h1>club contacts:</h1>
-        <input type="text" id="clubContactsInput" class="main-menu-input" placeholder="Enter contact email">
-        <button id="addContactButton" class="pointer">Add Contact</button>
-        <div id="contactList"></div>
-        <h1>upload club logo:</h1>
-        <input id="clubLogoInput" type="file">
-        <button id="submitClubButton" class="pointer" type="submit">submit club</button>
+    <div id="clubsContainerAdmin">
+        <!-- Event cards will be dynamically populated here -->
     </div>
 
-    <div class="main-menu-right">
-        <h1>add club category:</h1>
+    <!-- Expanded Club View -->
+    <div id="expandedClubView" style="display: none;">
+        <div id="expandedClubDetails">
+            <h2 id="expandedClubName"></h2>
+            <p id="expandedClubDescription"></p>
+            <ul id="expandedClubContacts"></ul>
+        </div>
+        <div id="expandedClubButtons">
+            <button id="backButton" class="pointer">Back</button>
+            <button id="editClubButton" class="pointer">Edit Club</button>
+            <button id="editClubButton" class="pointer">Deny Club</button>
+            <button id="addPhotoButton" class="pointer">Approve Club</button>
+        </div>
+    </div>
+
+    <div id="adminMenu" class="main-menu-right">
+        <h1>Add Club Category:</h1>
         <input type="text" class="main-menu-input" id="newCategoryInput">
-        <button id="addNewCategoryButton" class="pointer" type="submit">add category</button>
-        <h1>add trusted email:</h1>
+        <button id="addNewCategoryButton" class="pointer" type="submit">Add Category</button>
+        <h1>Add Trusted Email:</h1>
         <input type="text" class="main-menu-input" id="trustedEmailInput">
-        <button id="addNewTrustedEmailButton" class="pointer" type="submit">add email</button>        
+        <button id="addNewTrustedEmailButton" class="pointer" type="submit">Add Email</button>        
     </div>
 
     <script src="admin-build.js"></script>
