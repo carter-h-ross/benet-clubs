@@ -1,43 +1,40 @@
 {
   "db": {
     "admins": {
-      "clubProposals": [
-        {
-          "category": "category 1",
-          "clubDescription": "This is a description of the third club. This club meets on fridays after school",
-          "clubName": "club 3",
+      "newClubs": {
+        "second club request": {
+          "category": "all categories",
+          "clubDescription": "the description for the second club",
+          "clubName": "second club request",
           "contacts": [
             "4carter.ross@benet.org"
           ],
-          "logo": "gs://benet-clubs.appspot.com/test-1.jpg"
+          "logo": "https://firebasestorage.googleapis.com/v0/b/benet-clubs.appspot.com/o/images%2FScreenshot%202023-12-26%20105511.png?alt=media&token=76997218-7ba5-4962-84fd-84ec0e67a578"
         },
-        {
-          "category": "category 2",
-          "clubDescription": "This is a description of the fourth club. This club meets on fridays after school",
-          "clubName": "club 4",
+        "the new club": {
+          "category": "all categories",
+          "clubDescription": "the description",
+          "clubName": "the new club",
           "contacts": [
             "4carter.ross@benet.org"
           ],
-          "logo": "gs://benet-clubs.appspot.com/test-2.jpg"
+          "logo": "https://firebasestorage.googleapis.com/v0/b/benet-clubs.appspot.com/o/images%2FScreenshot%202024-01-04%20021443.png?alt=media&token=a6a2eefd-fc28-4649-b235-6bc5bcd0ab53"
         }
-      ]
+      }
     },
     "general": {
-      "clubCategories": [
-        "category 1",
-        "category 2"
-      ],
+      "clubCategories": {
+        "0": "category 1",
+        "1": "category 2",
+        "-Nv0Ve_Dyd4_fF0kP6uv": "all categories"
+      },
       "events": {
-        "1712624637965": {
-          "date": "4/12/2024, 12:07:00 AM",
+        "1712668315605": {
+          "date": "4/17/2024, 3:15:00 PM",
           "name": "coding club meeting"
         },
-        "1712631125838": {
-          "date": "4/24/2024, 11:54:00 PM",
-          "name": "coding club meeting"
-        },
-        "1712631145996": {
-          "date": "4/1/2024, 11:53:00 PM",
+        "1712668321925": {
+          "date": "4/24/2024, 3:15:00 PM",
           "name": "coding club meeting"
         }
       },

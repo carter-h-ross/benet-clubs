@@ -245,3 +245,33 @@ expandedClubViewBackButton.addEventListener("click", () => {
     document.body.classList.remove("expanded-club-view");
     document.getElementById("expandedClubView").style.display = "none";
 });
+
+const approveClubButton = document.getElementById("approveClub");
+approveClubButton.addEventListener("click", async function() {
+    try {
+        const clubName = document.getElementById("expandedClubName").textContent;
+        const clubRef = ref(database, `db/admins/newClubs/${clubName}`);
+        const approvedClubsRef = ref(database, 'db/students/clubs');
+        
+        // Get the club data
+        const clubSnapshot = await get(clubRef);
+        const clubData = clubSnapshot.val();
+        
+        // Get the current list of clubs from the database
+        const clubsSnapshot = await get(approvedClubsRef);
+        let clubsListApproved = clubsSnapshot.val() || []; // If no clubs exist, start with an empty array
+        
+        // Push the club data into the approved clubs list
+        clubsListApproved.push(clubData);
+        
+        // Set the approved clubs list in the database
+        await set(approvedClubsRef, clubsListApproved);
+        
+        // Reorder the clubs alphabetically
+        await reorderClubsAlphabetically();
+        
+        console.log("Club approved successfully.");
+    } catch (error) {
+        console.error("Error approving club:", error);
+    }
+});
