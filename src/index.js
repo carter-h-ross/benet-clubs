@@ -244,57 +244,7 @@ function setupClubContainerListeners() {
 }
 
 function expandClubView(clubContainer) {
-    // Remove any existing club logo from the expanded club view
-    const existingClubLogo = document.querySelector(".club-logo-expanded");
-    if (existingClubLogo) {
-        existingClubLogo.remove();
-    }
-
-    // Add a class to the body to indicate that the club view is expanded
-    document.body.classList.add("expanded-club-view");
-
-    // Get the club name from the clicked container
-    const clubName = clubContainer.querySelector("h2").textContent;
-
-    // Retrieve the index of the club
-    const clubIndex = indexes[clubName];
-
-    // Get the club details from the database based on the index
-    const clubRef = ref(database, `db/students/clubs/${clubIndex}`);
-    get(clubRef)
-        .then((snapshot) => {
-            const clubData = snapshot.val();
-            if (clubData) {
-                // Update the club name and description in the expanded view
-                document.getElementById("expandedClubName").textContent = clubData.clubName;
-                document.getElementById("expandedClubDescription").textContent = clubData.clubDescription;
-
-                // Clear existing contacts
-                const contactsList = document.getElementById("expandedClubContacts");
-                contactsList.innerHTML = "";
-
-                // Populate contacts as a list
-                clubData.contacts.forEach(contact => {
-                    const contactItem = document.createElement("li");
-                    contactItem.textContent = contact;
-                    contactsList.appendChild(contactItem);
-                });
-
-                // Create and append club logo to the expanded club view
-                const clubLogo = document.createElement("img");
-                clubLogo.classList.add("club-logo-expanded");
-                clubLogo.src = clubData.logo;
-                document.getElementById("expandedClubDetails").prepend(clubLogo);
-
-                // Display the expanded club view
-                document.getElementById("expandedClubView").style.display = "block";
-            } else {
-                console.error("Club data not found for index:", clubIndex);
-            }
-        })
-        .catch((error) => {
-            console.error("Error retrieving club information:", error);
-        });
+    alert("must sign in to view")
 }
 
 const expandedClubViewBackButton = document.getElementById("backButton")
@@ -329,14 +279,3 @@ async function reorderClubsAlphabetically() {
 //reorderClubsAlphabetically()
 
 //fillDatabase()
-
-// Event listener for the club category dropdown menu
-const clubCategoryInput = document.getElementById("clubCategoryInput");
-clubCategoryInput.addEventListener("change", async (event) => {
-    const selectedCategory = event.target.value;
-    await loadClubsByCategory(selectedCategory);
-}); /*
-    <select id="clubCategoryInput">
-        <option value="all categories">All Clubs</option>
-    </select>
-*/
