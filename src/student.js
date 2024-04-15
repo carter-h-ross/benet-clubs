@@ -637,7 +637,7 @@ clubCategoryInput.addEventListener("change", async (event) => {
 const submitNewClubButton = document.getElementById("submitNewClubButton");
 // Function to handle club submission
 submitNewClubButton.addEventListener("click", async () => {
-    const category = clubCategoryInput.value;
+    const category = document.getElementById("clubCategoryInputNewClub").value;
     const clubName = clubNameInput.value;
     const clubDescription = clubDescriptionInput.value;
     const clubLogoFile = clubLogoInput.files[0];
@@ -656,6 +656,7 @@ submitNewClubButton.addEventListener("click", async () => {
         contacts,
         logo: logoDownloadURL || "", // Use the download URL if available, otherwise an empty string
     };
+    console.log(newClub);
 
     try {
 

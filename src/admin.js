@@ -1,7 +1,7 @@
 // Import the necessary functions from the Firebase SDK
 import { initializeApp } from "firebase/app";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { getDatabase, ref, set,get, push, child} from "firebase/database";
+import { getDatabase, ref, set,get, push, child, remove} from "firebase/database";
 import { getStorage, ref as storageRef, uploadBytes , getDownloadURL} from "firebase/storage";
 import { getAuth } from "firebase/auth";
 
@@ -270,8 +270,12 @@ approveClubButton.addEventListener("click", async function() {
         // Reorder the clubs alphabetically
         await reorderClubsAlphabetically();
         
+        // remove club from approved clubs path in database
+        await remove(clubRef)
+        
         console.log("Club approved successfully.");
     } catch (error) {
         console.error("Error approving club:", error);
     }
 });
+
